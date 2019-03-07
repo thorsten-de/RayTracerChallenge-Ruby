@@ -7,3 +7,7 @@ group :test do
     gem 'cucumber', '3.1.0'
     gem 'rspec'
 end
+
+group :development do
+    gem 'irb'
+end
