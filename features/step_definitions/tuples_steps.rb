@@ -22,6 +22,10 @@ module TupleHelper
     def vector(x, y, z)
       Tuple::vector(x, y, z)
     end
+    
+    def color(r, g, b)
+      Tuple::color(r, g, b)
+    end
 
     def expect_tuple_equals(v, w)
       v.zip(w)
@@ -34,7 +38,8 @@ module TupleHelper
       @values ||= {
         a: {},
         v: {},
-        p: {}
+        p: {},
+        c: {}
       }
       @values[type][id] = value
     end
@@ -191,5 +196,56 @@ Then('cross\(v{int}, v{int}) = vector\({int}, {int}, {int})') do |i, j, x, y, z|
   expect_tuple_equals(
     get(:v, i).cross(get(:v, j)),
     vector(x, y, z)
+  )
+end
+
+
+## COLORS
+
+Given('c ← color\({float}, {float}, {float})') do |r, g, b|
+  @c = color(r, g, b)
+end
+
+Then("c.red = {float}") do |float|
+  expect(@c.red).to eq(float)
+end
+
+Then("c.green = {float}") do |float|
+  expect(@c.green).to eq(float)
+end
+
+Then("c.blue = {float}") do |float|
+  expect(@c.blue).to eq(float)
+end
+
+Given('c{int} ← color\({float}, {float}, {float})') do |int, r, g, b|
+  put(:c, int, color(r, g, b))
+end
+
+Then("c{int} + c{int} = c") do |i, j|
+  expect_tuple_equals(
+    get(:c, i) + get(:c, j),
+    @c
+  )
+end
+
+Then("c{int} - c{int} = c") do |i, j|
+  expect_tuple_equals(
+    get(:c, i)- get(:c, j),
+    @c
+  )
+end
+
+Then("c{int} * {int} = c") do |i, scalar|
+  expect_tuple_equals(
+    get(:c, i) * scalar,
+    @c
+  )
+end
+
+Then("c{int} * c{int} = c") do |i, j|
+  expect_tuple_equals(
+    get(:c, i).product( get(:c, j)),
+    @c
   )
 end

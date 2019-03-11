@@ -35,6 +35,8 @@ class Tuple
     Tuple.new([x, y, z, 1])
   end
 
+  
+
   def data
     @data
   end
@@ -109,4 +111,27 @@ class Tuple
       @data.map(&block)
     )
   end
+
+  # Implementation of Colors... Very lazy....
+  def self.color(r, g, b)
+    Tuple.new([r, g, b, 0])
+  end
+
+  def red
+    @data[0]
+  end
+
+  def green
+    @data[1]
+  end
+
+  def blue
+    @data[2]
+  end
+
+  def product(other)
+    zip_map(other, &:*)
+  end
+
+
 end
