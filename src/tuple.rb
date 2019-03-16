@@ -133,5 +133,11 @@ class Tuple
     zip_map(other, &:*)
   end
 
+  def to_ppm_color(factor)
+    @data[0..2].map do |c| 
+      ([0, [factor, (c * factor).round()].min].max).to_s
+    end
+  end
+
 
 end
