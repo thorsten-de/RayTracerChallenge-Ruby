@@ -35,8 +35,6 @@ class Tuple
     Tuple.new([x, y, z, 1])
   end
 
-  
-
   def data
     @data
   end
@@ -139,5 +137,7 @@ class Tuple
     end
   end
 
-
+  def to_matrix
+    Matrix.new(4, 1, @data)
+  end
 end
