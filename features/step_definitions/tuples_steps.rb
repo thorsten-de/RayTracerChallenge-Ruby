@@ -85,7 +85,7 @@ Then('a{int} + a{int} = tuple\({int}, {int}, {int}, {int})') do |i, j, x, y, z, 
 end
 
 Given("p{int} ← point\\({int}, {int}, {int})") do |i, x, y, z |
-  put(:p, i, vector(x, y, z))
+  put(:p, i, point(x, y, z))
 end
 
 Then("p{int} - p{int} = vector\\({int}, {int}, {int})") do |i, j, x, y, z|
