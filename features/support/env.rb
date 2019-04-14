@@ -26,7 +26,8 @@ module BaseHelper
       a: {},
       v: {},
       p: {},
-      c: {}
+      c: {},
+      m: {}
     }
     @values[type][id] = value
   end
