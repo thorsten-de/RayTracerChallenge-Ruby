@@ -51,24 +51,20 @@ Then("a is a vector") do
   expect(@a.vector?).to be true
 end
 
-Given("p ← point\\({int}, {int}, {int})") do |x, y, z|
-  @p = point(x, y, z)
+Given("p ← {point}") do |p|
+  @p = p
 end
 
-Then("p = tuple\\({int}, {int}, {int}, {int})") do |x, y, z, w|
-  expect_tuple_equals(@p,  tuple(x, y, z, w))
+Then("p = {tuple}") do |t|
+  expect_tuple_equals(@p, t)
 end
 
-Given('v ← vector\({float}, {float}, {float})') do |x, y, z|
-  @v = vector(x, y, z)
+Given('v ← {vector}') do |v|
+  @v = v
 end
 
-Given('v ← vector\({int}, {int}, {int})') do |x, y, z|
-  @v = vector(x.to_f, y.to_f, z.to_f)
-end
-
-Then('v = tuple\({int}, {int}, {int}, {int})') do |x, y, z, w|
-  expect_tuple_equals(@v,  tuple(x, y, z, w))
+Then('v = {tuple}') do |t|
+  expect_tuple_equals(@v, t)
 end
 
 Given('a ← tuple\({float}, {float}, {float}, {float})') do |x, y, z, w|

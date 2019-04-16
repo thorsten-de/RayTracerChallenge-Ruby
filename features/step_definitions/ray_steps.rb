@@ -5,6 +5,9 @@ module RayHelper
     Ray.new(origin, direction)
   end
 
+  def sphere 
+    Sphere.new()
+  end
 end
 
 World RayHelper
@@ -21,13 +24,41 @@ Then("r.direction = direction") do
   expect_tuple_equals(@r.direction, @v)
 end
 
-Given("r ← ray\\(point\\({int}, {int}, {int}), vector\\({int}, {int}, {int}))") do |p_x, p_y, p_z, v_x, v_y, v_z|
-  @r = ray(point(p_x, p_y, p_z), vector(v_x, v_y, v_z))
+Given('r ← ray\({point}, {vector})') do |origin, direction|
+  @r = ray(origin, direction)
 end
 
-Then('position\(r, {float}) = point\({float}, {int}, {int})') do |t, x, y, z|
+Then('position\(r, {num}) = point\({num}, {num}, {num})') do |t, x, y, z|
   expect_tuple_equals(
     @r.position(t),
     point(x, y, z)
   )
+end
+
+Given("s ← sphere") do
+  @s = sphere()
+end
+
+When("xs ← intersect\\(s, r)") do
+  @xs = @r.intersect(@s)
+end
+
+Then("xs.count = {num}") do |num|
+  expect(@xs.length).to eq(num)
+end
+
+Then("xs[{int}] = {num}") do |i, num|
+  expect(@xs[i]).to eq(num)
+end
+
+When("i ← intersection\\({num}, s)") do |t|
+  @i = Intersection.new(t, @s)
+end
+
+Then("i.t = {num}") do |num|
+  expect(@i.t).to eq(num)
+end
+
+Then("i.object = s") do
+  expect(@i.object).to eq(@s)
 end
