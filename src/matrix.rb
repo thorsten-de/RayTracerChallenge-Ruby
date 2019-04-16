@@ -143,4 +143,20 @@ class Matrix
 
     return identity_matrix
   end
+
+  def self.identity 
+    identity_matrix(4)
+  end
+
+  def rotate(axis, r)
+    Transformations.rotate(axis, r) * self
+  end
+
+  def scale(sx, sy, sz)
+    Transformations.scaling(sx, sy, sz) * self
+  end
+
+  def translate(x, y, z)
+    Transformations.translate(x, y, z) * self
+  end
 end
