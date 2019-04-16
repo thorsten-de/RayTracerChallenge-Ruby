@@ -123,9 +123,39 @@ Feature: Casting Rays to the Universe
     When r2 ← transform(r, m)
     Then r2.origin = point(4, 6, 8)
     And r2.direction = vector(0, 1, 0)
+
   Scenario: Scaling a ray
     Given r ← ray(point(1, 2, 3), vector(0, 1, 0))
     And m ← scaling(2, 3, 4)
     When r2 ← transform(r, m)
     Then r2.origin = point(2, 6, 12)
     And r2.direction = vector(0, 3, 0)
+
+  Scenario: A sphere's default transformation
+    Given s ← sphere
+    Then s.transform = identity_matrix
+
+  Scenario: Changing a sphere's transformation
+    Given s ← sphere
+    And m ← translation(2, 3, 4)
+    When set_transform(s, m)
+    Then s.transform = m
+
+
+  Scenario: Intersecting a scaled sphere with a ray
+    Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
+    And s ← sphere
+    And m ← scaling(2, 2, 2)
+    When set_transform(s, m)
+    And xs ← intersect(s, r)
+    Then xs.count = 2
+    And xs[0].t = 3
+    And xs[1].t = 7
+
+  Scenario: Intersecting a translated sphere with a ray
+    Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
+    And s ← sphere
+    And m ← translation(5, 0, 0)
+    When set_transform(s, m)
+    And xs ← intersect(s, r)
+    Then xs.count = 0

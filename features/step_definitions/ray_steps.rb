@@ -52,7 +52,7 @@ Given("s ← sphere") do
 end
 
 When("xs ← intersect\\(s, r)") do
-  @xs = @r.intersect(@s)
+  @xs = @s.intersect(@r)
 end
 
 Then("xs.count = {num}") do |num|
@@ -128,5 +128,24 @@ Then("r{int}.direction = {vector}") do |i, v|
   expect_tuple_equals(
     r[i].direction,
     v
+  )
+end
+
+
+Then("s.transform = identity_matrix") do
+  matrix_equals(
+    @s.transform,
+    identity_matrix
+  )
+end
+
+When("set_transform\\(s, m)") do
+  @s.transform = @m
+end
+
+Then("s.transform = m") do
+  matrix_equals(
+    @s.transform,
+    @m
   )
 end

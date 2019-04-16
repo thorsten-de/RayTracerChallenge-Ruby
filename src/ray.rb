@@ -43,6 +43,23 @@ end
 
 class Sphere
   def initialize
+    @transform = Matrix.identity
+  end
+
+  def transform
+    @transform
+  end
+
+  def transform=(m)
+    @transform = m
+  end
+
+  def intersect(original_ray)
+    original_ray
+      .transform(@transform.inverse)
+      .intersect(self)
+
+    ##TODO: Improve calculation by memoizing
   end
 end
 
