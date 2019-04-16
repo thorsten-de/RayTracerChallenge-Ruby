@@ -28,16 +28,16 @@ Feature: Casting Rays to the Universe
     And s ← sphere
     When xs ← intersect(s, r)
     Then xs.count = 2
-    And xs[0] = 4.0
-    And xs[1] = 6.0
+    And xs[0].t = 4.0
+    And xs[1].t = 6.0
 
   Scenario: A ray intersects a sphere at a tangent
     Given r ← ray(point(0, 1, -5), vector(0, 0, 1))
     And s ← sphere
     When xs ← intersect(s, r)
     Then xs.count = 2
-    And xs[0] = 5.0
-    And xs[1] = 5.0
+    And xs[0].t = 5.0
+    And xs[1].t = 5.0
 
   Scenario: A ray misses a sphere
     Given r ← ray(point(0, 2, -5), vector(0, 0, 1))
@@ -50,8 +50,8 @@ Feature: Casting Rays to the Universe
     And s ← sphere
     When xs ← intersect(s, r)
     Then xs.count = 2
-    And xs[0] = -1.0
-    And xs[1] = 1.0
+    And xs[0].t = -1.0
+    And xs[1].t = 1.0
 
 
   Scenario: A sphere is behind a ray
@@ -59,11 +59,73 @@ Feature: Casting Rays to the Universe
     And s ← sphere
     When xs ← intersect(s, r)
     Then xs.count = 2
-    And xs[0] = -6.0
-    And xs[1] = -4.0
+    And xs[0].t = -6.0
+    And xs[1].t = -4.0
 
   Scenario: An intersection encapsulates t and object
     Given s ← sphere
     When i ← intersection(3.5, s)
     Then i.t = 3.5
     And i.object = s
+
+  Scenario: Aggregating intersections
+    Given s ← sphere
+    And i1 ← intersection(1, s)
+    And i2 ← intersection(2, s)
+    When xs ← intersections(i1, i2)
+    Then xs.count = 2
+    And xs[0].t = 1
+    And xs[1].t = 2
+
+  Scenario: Intersect sets the object on the intersection
+    Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
+    And s ← sphere
+    When xs ← intersect(s, r)
+    Then xs.count = 2
+    And xs[0].object = s
+    And xs[1].object = s
+
+  Scenario: The hit, when all intersections have positive t
+    Given s ← sphere
+    And i1 ← intersection(1, s)
+    And i2 ← intersection(2, s)
+    And xs ← intersections(i2, i1)
+    When i ← hit(xs)
+    Then i = i1
+  Scenario: The hit, when some intersections have negative t
+    Given s ← sphere
+    And i1 ← intersection(-1, s)
+    And i2 ← intersection(1, s)
+    And xs ← intersections(i2, i1)
+    When i ← hit(xs)
+    Then i = i2
+  Scenario: The hit, when all intersections have negative t
+    Given s ← sphere
+    And i1 ← intersection(-2, s)
+    And i2 ← intersection(-1, s)
+    And xs ← intersections(i2, i1)
+    When i ← hit(xs)
+    Then i is nothing
+
+  Scenario: The hit is always the lowest nonnegative intersection
+    Given s ← sphere
+    And i1 ← intersection(5, s)
+    And i2 ← intersection(7, s)
+    And i3 ← intersection(-3, s)
+    And i4 ← intersection(2, s)
+    And xs ← intersections(i1, i2, i3, i4)
+    When i ← hit(xs)
+    Then i = i4
+
+  Scenario: Translating a ray
+    Given r ← ray(point(1, 2, 3), vector(0, 1, 0))
+    And m ← translation(3, 4, 5)
+    When r2 ← transform(r, m)
+    Then r2.origin = point(4, 6, 8)
+    And r2.direction = vector(0, 1, 0)
+  Scenario: Scaling a ray
+    Given r ← ray(point(1, 2, 3), vector(0, 1, 0))
+    And m ← scaling(2, 3, 4)
+    When r2 ← transform(r, m)
+    Then r2.origin = point(2, 6, 12)
+    And r2.direction = vector(0, 3, 0)

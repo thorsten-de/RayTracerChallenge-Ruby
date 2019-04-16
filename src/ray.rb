@@ -16,6 +16,11 @@ class Ray
     @origin + @direction * t  
   end
 
+  def transform(m)
+    Ray.new(m * @origin,
+        m * @direction)
+  end
+
   def intersect(obj)
     sphere_to_ray = @origin - Tuple.point(0, 0, 0)
 
@@ -28,10 +33,11 @@ class Ray
     if discriminant < 0
       []
     else
-      [ (-b - Math.sqrt(discriminant)) / (2 * a),
-        (-b + Math.sqrt(discriminant)) / (2 * a)]
+      Intersection.intersections(
+        Intersection.new((-b - Math.sqrt(discriminant)) / (2 * a), obj),
+        Intersection.new((-b + Math.sqrt(discriminant)) / (2 * a), obj)
+      )
     end
-
   end
 end
 
@@ -52,5 +58,14 @@ class Intersection
 
   def t
     @t 
+  end
+
+  def self.intersections(*args)
+    args
+  end
+
+  def self.hit(xs)
+    xs.reject {|x| x.t < 0}
+      .min {|xs1, xs2| xs1.t <=> xs2.t }
   end
 end

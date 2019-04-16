@@ -10,6 +10,7 @@ RSpec::Matchers.define :eps do |expected|
 end
 
 module BaseHelper
+
   def color(r, g, b)
     Tuple::color(r, g, b)
   end
@@ -27,7 +28,7 @@ module BaseHelper
       v: {},
       p: {},
       c: {},
-      m: {}
+      m: {},
     }
     @values[type][id] = value
   end
