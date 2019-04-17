@@ -1,5 +1,3 @@
-require 'pmap'
-
 class Canvas
 
   def initialize(width, height)
