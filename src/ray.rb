@@ -52,14 +52,18 @@ class Sphere
 
   def transform=(m)
     @transform = m
+    @_inverse = nil 
+  end
+
+  def inverse_transform
+    #@transform.inverse
+    @_inverse ||= @transform.inverse
   end
 
   def intersect(original_ray)
     original_ray
-      .transform(@transform.inverse)
+      .transform(inverse_transform)
       .intersect(self)
-
-    ##TODO: Improve calculation by memoizing
   end
 end
 

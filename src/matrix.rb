@@ -149,7 +149,7 @@ class Matrix
   end
 
   def rotate(axis, r)
-    Transformations.rotate(axis, r) * self
+    Transformations.rotation(axis, r) * self
   end
 
   def scale(sx, sy, sz)

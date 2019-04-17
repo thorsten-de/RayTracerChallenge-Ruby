@@ -1,3 +1,4 @@
+require 'pmap'
 
 class Canvas
 
@@ -22,6 +23,18 @@ class Canvas
   def []=(x, y, value)
     if x >= 0 && x < @width && y >= 0 && y < @height
       @data[x + @width * y] = value
+    end
+  end
+
+  def each_pixel
+    (0..@data.length - 1).each do |i|
+      yield(i % @width, i / @width)
+    end
+  end
+
+  def map!
+    @data.map!.with_index do |item, i|
+      yield(item, i % @width, i / @width)
     end
   end
 
