@@ -41,32 +41,6 @@ class Ray
   end
 end
 
-class Sphere
-  def initialize
-    @transform = Matrix.identity
-  end
-
-  def transform
-    @transform
-  end
-
-  def transform=(m)
-    @transform = m
-    @_inverse = nil 
-  end
-
-  def inverse_transform
-    #@transform.inverse
-    @_inverse ||= @transform.inverse
-  end
-
-  def intersect(original_ray)
-    original_ray
-      .transform(inverse_transform)
-      .intersect(self)
-  end
-end
-
 class Intersection
   def initialize(t, o)
     @object = o

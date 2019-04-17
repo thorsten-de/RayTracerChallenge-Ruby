@@ -19,6 +19,10 @@ class Tuple
     @data[3]
   end
 
+  def w=(value)
+    @data[3] =value 
+  end
+
   def vector?
     w == 0.0
   end
@@ -88,8 +92,13 @@ class Tuple
     )
   end
 
+
   def normalize
     map_scalar(magnitude, &:/)
+  end
+
+  def reflect(normal)
+    self - normal * 2 * self.dot(normal)
   end
 
   def zip_map(other, &block)
@@ -140,4 +149,9 @@ class Tuple
   def to_matrix
     Matrix.new(4, 1, @data)
   end
+
+  def ==(other)
+    data == other.data
+  end
+
 end

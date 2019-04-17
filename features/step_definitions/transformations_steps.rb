@@ -16,6 +16,10 @@ module TransformationsHelper
   def shearing(sxy, sxz, syx, syz, szx, szy)
     Transformations.shearing(sxy, sxz, syx, syz, szx, szy)
   end
+
+  def m
+    (@_m ||= {})
+  end
   
   POINT_MAP = {
     "0" => 0,
@@ -115,20 +119,20 @@ Given("transform ← shearing\\({int}, {int}, {int}, {int}, {int}, {int})") do |
   @transform = shearing(sxy, sxz, syx, syz, szx, szy)
 end
 
-Given("M{int} ← rotation\\({string}, π \/ {int})") do |i, axis, pi_fract|
-  put(:m, i, rotation(axis, Math::PI / pi_fract))
+Given("M{int} ← rotation\\({string}, π \/ {num})") do |i, axis, pi_fract|
+  m[i] = rotation(axis, Math::PI / pi_fract)
 end
 
-Given("M{int} ← scaling\\({int}, {int}, {int})") do |i, x, y, z|
-  put(:m, i, scaling(x,y,z))
+Given("M{int} ← scaling\\({num}, {num}, {num})") do |i, x, y, z|
+  m[i] = scaling(x,y,z)
 end
 
-Given("M{int} ← translation\\({int}, {int}, {int})") do |i, x, y, z|
-  put(:m, i, translation(x, y, z))
+Given("M{int} ← translation\\({num}, {num}, {num})") do |i, x, y, z|
+  m[i] = translation(x, y, z)
 end
 
 When("p{int} ← M{int} * p{int}") do |p_j, m_i, p_i|
-  put(:p, p_j, get(:m, m_i) * get(:p, p_i))
+  put(:p, p_j, m[m_i] * get(:p, p_i))
 end
 
 Then("p{int} = point\\({int}, {int}, {int})") do |i, x, y, z|
@@ -139,7 +143,7 @@ Then("p{int} = point\\({int}, {int}, {int})") do |i, x, y, z|
 end
 
 When("T ← M{int} * M{int} * M{int}") do |i, j, k|
-  @t = get(:m, i) * get(:m, j) * get(:m, k)
+  @t = m[i] * m[j] * m[k]
 end
 
 Then("T * p = point\\({int}, {int}, {int})") do |x, y, z|
