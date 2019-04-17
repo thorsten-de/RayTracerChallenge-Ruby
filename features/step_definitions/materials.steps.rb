@@ -49,5 +49,5 @@ When("result ← lighting\\(m, light, position, eyev, normalv)") do
 end
 
 Then("result = {color}") do |color|
-  expect(@result).to eq(color)
+  expect_tuple_equals(@result, color)
 end

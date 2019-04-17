@@ -77,6 +77,7 @@ class Tuple
     @data.zip(other.data).map {|a, b| a * b}.sum() 
   end
 
+
   def cross(other)
     Tuple.vector(
       self.y * other.z - self.z * other.y,
@@ -153,5 +154,8 @@ class Tuple
   def ==(other)
     data == other.data
   end
+end
 
+module Color 
+  BLACK = Tuple.color(0.0, 0.0, 0.0)
 end

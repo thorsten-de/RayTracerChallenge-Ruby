@@ -17,12 +17,27 @@ class Material
     @shininess == other.shininess
   end
 
-  def lightning(light, pos, eyev, normalv)
-    light_to_pos = light.position - pos
-    reflectionv = light_to_pos.reflect(normalv)
+  def lightning(light, point, eyev, normalv)
+    effective_color = @color.product(light.intensity)
 
-    @color * @ambient + 
-    @color * @diffuse + 
-    light.intensity * @specular * reflectionv.normalize.dot(eyev.normalize)
+    lightv = (light.position - point).normalize
+
+    ambient = effective_color * @ambient
+    diffuse = Color::BLACK
+    specular = Color::BLACK
+
+    light_dot_normal = lightv.dot(normalv)
+    unless light_dot_normal < 0 
+      diffuse = effective_color * @diffuse * light_dot_normal
+
+      reflectv = (-lightv).reflect(normalv)
+      reflect_dot_eye = reflectv.dot(eyev)
+      if reflect_dot_eye > 0
+        factor = reflect_dot_eye ** @shininess
+        specular = light.intensity * @specular * factor
+      end
+    end
+
+    ambient + diffuse + specular
   end
 end
