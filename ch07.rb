@@ -13,16 +13,16 @@ world = World.new(
     ),
     # Left Wall
     Sphere.new(
-      transformation: Transformations.translation(0, 0, 5) *
-        Transformations.rotation(:y, Math::PI / 4) *
+      transform: Transformations.translation(0, 0, 5) *
+        Transformations.rotation(:y, -Math::PI / 4) *
         Transformations.rotation(:x, Math::PI / 2) *
         Transformations.scaling(10, 0.01, 10),
       material: floor_material
     ),
     # Right Wall
     Sphere.new(
-      transformation: Transformations.translation(0, 0, 5) *
-        Transformations.rotation(:y, - Math::PI / 4) *
+      transform: Transformations.translation(0, 0, 5) *
+        Transformations.rotation(:y, Math::PI / 4) *
         Transformations.rotation(:x, Math::PI / 2) *
         Transformations.scaling(10, 0.01, 10),
       material: floor_material
@@ -38,18 +38,20 @@ world = World.new(
     ),
     # Right
     Sphere.new(
-      transform: Transformations.translation(-0.5, 1, 0.5),
+      transform: Transformations.translation(1.5, 0.5, -0.5) *
+        Transformations.scaling(0.5, 0.5, 0.5),
       material: Material.new(
-        color: Tuple.color(0.1, 1.0, 0.5),
+        color: Tuple.color(0.5, 1.0, 0.1),
         diffuse: 0.7,
         specular: 0.3
       )
     ),
     # Left
     Sphere.new(
-      transform: Transformations.translation(-0.5, 1, 0.5),
+      transform: Transformations.translation(-1.5, 0.33, -0.75) *
+      Transformations.scaling(0.33, 0.33, 0.33),
       material: Material.new(
-        color: Tuple.color(0.1, 1.0, 0.5),
+        color: Tuple.color(1, 0.8, 0.1),
         diffuse: 0.7,
         specular: 0.3
       )
@@ -57,7 +59,7 @@ world = World.new(
   ]
 )
 
-camera = Camera.new(100, 50, Math::PI / 3)
+camera = Camera.new(600, 300, Math::PI / 3)
 camera.transform = Transformations.view_transform(Tuple.point(0, 1.5, -5),
                                                   Tuple.point(0, 1, 0),
                                                   Tuple.vector(0, 1, 0))
