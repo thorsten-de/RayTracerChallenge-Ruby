@@ -1,18 +1,13 @@
 class Canvas
-
   def initialize(width, height)
     @width = width
     @height = height
     @data = Array.new(width * height, Tuple.color(0.0, 0.0, 0.0))
   end
 
-  def width 
-    @width
-  end
+  attr_reader :width
 
-  def height
-    @height
-  end
+  attr_reader :height
 
   def [](x, y)
     @data[x + @width * y]
@@ -34,6 +29,7 @@ class Canvas
     @data.map!.with_index do |item, i|
       yield(item, i % @width, i / @width)
     end
+    self
   end
 
   def all_pixel
@@ -41,27 +37,27 @@ class Canvas
   end
 
   def all_pixel=(value)
-    @data.map!{|_| value}
+    @data.map! { |_| value }
   end
 
   def to_ppm
     factor = 255
     s = "P3\n#{@width} #{height}\n#{factor}\n"
-    
-    ((0..@height-1).map do |j|
-      (0..@width-1).map {|i| self[i, j].to_ppm_color(factor)}
-        .join(" ")
-    end).reduce(s) {|acc, r| split_row_before_70(acc, r)}
+
+    ((0..@height - 1).map do |j|
+      (0..@width - 1).map { |i| self[i, j].to_ppm_color(factor) }
+        .join(' ')
+    end).reduce(s) { |acc, r| split_row_before_70(acc, r) }
   end
 
   SPLIT_AT = 70
   def split_row_before_70(s, r)
     return ((s << r) << "\n") if r.length <= SPLIT_AT
-      
-    idx = r.rindex(" ", SPLIT_AT - 1)
-    (s << r[0..idx-1]) << "\n"
-    return split_row_before_70(s, r[(idx + 1) .. -1])
-  end    
+
+    idx = r.rindex(' ', SPLIT_AT - 1)
+    (s << r[0..idx - 1]) << "\n"
+    split_row_before_70(s, r[(idx + 1)..-1])
+  end
 
   def save_ppm(filename)
     open(filename, 'w') do |f|

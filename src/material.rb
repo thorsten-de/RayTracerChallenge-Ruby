@@ -11,10 +11,10 @@ class Material
 
   def ==(other)
     @color == other.color &&
-    @ambient == other.ambient &&
-    @diffuse == other.diffuse &&
-    @specular == other.specular &&
-    @shininess == other.shininess
+      @ambient == other.ambient &&
+      @diffuse == other.diffuse &&
+      @specular == other.specular &&
+      @shininess == other.shininess
   end
 
   def lightning(light, point, eyev, normalv)
@@ -27,13 +27,13 @@ class Material
     specular = Color::BLACK
 
     light_dot_normal = lightv.dot(normalv)
-    unless light_dot_normal < 0 
+    unless light_dot_normal < 0
       diffuse = effective_color * @diffuse * light_dot_normal
 
       reflectv = (-lightv).reflect(normalv)
       reflect_dot_eye = reflectv.dot(eyev)
       if reflect_dot_eye > 0
-        factor = reflect_dot_eye ** @shininess
+        factor = reflect_dot_eye**@shininess
         specular = light.intensity * @specular * factor
       end
     end

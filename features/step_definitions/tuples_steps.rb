@@ -18,7 +18,6 @@ end
 
 World TupleHelper
 
-
 Then("a.x = {float}") do |float|
   expect(@a.x).to equal(float)
 end

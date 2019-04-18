@@ -1,28 +1,21 @@
 class Sphere
-  attr_accessor(:material)
+  attr_accessor(:material, :origin)
 
-  def initialize
-    @transform = Matrix.identity
+  def initialize(opts = {})
+    @transform = opts[:transform] || Matrix.identity
     @origin = Tuple.point(0.0, 0.0, 0.0)
-    @material = Material.new()
+    @material = opts[:material] || Material.new
   end
 
-  def origin
-    @origin
-  end
-
-  def transform
-    @transform
-  end
+  attr_reader :transform
 
   def transform=(m)
     @transform = m
-    @_inverse = nil 
+    @_inverse = nil
   end
 
   def inverse_transform
-    #@transform.inverse
-    @_inverse ||= @transform.inverse
+    @inverse_transform ||= @transform.inverse
   end
 
   def intersect(original_ray)
@@ -38,5 +31,11 @@ class Sphere
     world_normal = inverse_transform.transpose * object_normal
     world_normal.w = 0
     world_normal.normalize
+  end
+
+  def ==(other)
+    @origin == other.origin &&
+      @material == other.material &&
+      @transform == other.transform
   end
 end

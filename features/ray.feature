@@ -62,12 +62,6 @@ Feature: Casting Rays to the Universe
     And xs[0].t = -6.0
     And xs[1].t = -4.0
 
-  Scenario: An intersection encapsulates t and object
-    Given s ← sphere
-    When i ← intersection(3.5, s)
-    Then i.t = 3.5
-    And i.object = s
-
   Scenario: Aggregating intersections
     Given s ← sphere
     And i1 ← intersection(1, s)

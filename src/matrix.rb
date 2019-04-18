@@ -122,7 +122,7 @@ class Matrix
   def inspect
     @data
       .each_slice(@n)
-      .map { |row| "\n| " << row.map{|value| sprintf("%6.2f", value) }.join(" | ") << " |" }
+      .map { |row| "\n| " << row.map{|value| sprintf("%9.5f", value) }.join(" | ") << " |" }
       .join() << "\n"
   end
 
@@ -157,6 +157,10 @@ class Matrix
   end
 
   def translate(x, y, z)
-    Transformations.translate(x, y, z) * self
+    Transformations.translation(x, y, z) * self
+  end
+
+  def ==(other)
+    @data == other.all_values
   end
 end

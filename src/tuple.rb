@@ -20,7 +20,7 @@ class Tuple
   end
 
   def w=(value)
-    @data[3] =value 
+    @data[3] = value
   end
 
   def vector?
@@ -34,30 +34,26 @@ class Tuple
   def self.vector(x, y, z)
     Tuple.new([x, y, z, 0])
   end
-  
+
   def self.point(x, y, z)
     Tuple.new([x, y, z, 1])
   end
 
-  def data
-    @data
-  end
+  attr_reader :data
 
   def zip(other)
     @data.zip(other.data)
   end
 
-  def ==( other )
-    if other.respond_to?(:data)
-      self.data == other.data
-    end
+  def ==(other)
+    data == other.data if other.respond_to?(:data)
   end
 
-  def +( other )
+  def +(other)
     zip_map(other, &:+)
   end
 
-  def -( other )
+  def -(other)
     zip_map(other, &:-)
   end
 
@@ -68,49 +64,47 @@ class Tuple
   def *(scalar)
     map_scalar(scalar, &:*)
   end
-  
+
   def /(scalar)
     map_scalar(scalar, &:/)
   end
 
   def dot(other)
-    @data.zip(other.data).map {|a, b| a * b}.sum() 
+    @data.zip(other.data).map { |a, b| a * b }.sum
   end
-
 
   def cross(other)
     Tuple.vector(
-      self.y * other.z - self.z * other.y,
-      self.z * other.x - self.x * other.z,
-      self.x * other.y - self.y * other.x
+      y * other.z - z * other.y,
+      z * other.x - x * other.z,
+      x * other.y - y * other.x
     )
   end
 
   def magnitude
-    Math::sqrt(
-      @data.map {|vi| vi * vi }
+    Math.sqrt(
+      @data.map { |vi| vi * vi }
       .sum
     )
   end
-
 
   def normalize
     map_scalar(magnitude, &:/)
   end
 
   def reflect(normal)
-    self - normal * 2 * self.dot(normal)
+    self - normal * 2 * dot(normal)
   end
 
-  def zip_map(other, &block)
+  def zip_map(other)
     Tuple.new(
-      @data.zip(other.data).map {|vi, wi| block.(vi, wi)}
+      @data.zip(other.data).map { |vi, wi| yield(vi, wi) }
     )
   end
 
-  def map_scalar(scalar, &block)
+  def map_scalar(scalar)
     Tuple.new(
-      @data.map {|v| block.(v, scalar) }
+      @data.map { |v| yield(v, scalar) }
     )
   end
 
@@ -142,20 +136,16 @@ class Tuple
   end
 
   def to_ppm_color(factor)
-    @data[0..2].map do |c| 
-      ([0, [factor, (c * factor).round()].min].max).to_s
+    @data[0..2].map do |c|
+      [0, [factor, (c * factor).round].min].max.to_s
     end
   end
 
   def to_matrix
     Matrix.new(4, 1, @data)
   end
-
-  def ==(other)
-    data == other.data
-  end
 end
 
-module Color 
+module Color
   BLACK = Tuple.color(0.0, 0.0, 0.0)
 end

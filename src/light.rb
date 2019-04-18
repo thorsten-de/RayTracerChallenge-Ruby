@@ -9,4 +9,9 @@ class Light
   def self.point_light(position, intensity)
     Light.new(position, intensity)
   end
+
+  def ==(other)
+    @position == other.position &&
+      @intensity == other.intensity
+  end
 end

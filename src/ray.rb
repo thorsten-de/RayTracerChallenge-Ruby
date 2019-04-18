@@ -1,24 +1,22 @@
+require 'ostruct'
+
 class Ray
   def initialize(origin, direction)
     @origin = origin
     @direction = direction
   end
 
-  def origin
-    @origin
-  end
+  attr_reader :origin
 
-  def direction
-    @direction
-  end
+  attr_reader :direction
 
   def position(t)
-    @origin + @direction * t  
+    @origin + @direction * t
   end
 
   def transform(m)
     Ray.new(m * @origin,
-        m * @direction)
+            m * @direction)
   end
 
   def intersect(obj)
@@ -39,6 +37,24 @@ class Ray
       )
     end
   end
+
+  def prepare_computations(xs)
+    point = position(xs.t)
+    eyev = -@direction
+    normalv = xs.object.normal_at(point)
+
+    inside, normalv = if normalv.dot(eyev) < 0
+                        [true, -normalv]
+                      else
+                        [false, normalv]
+    end
+    OpenStruct.new(t: xs.t,
+                   object: xs.object,
+                   point: point,
+                   eyev: eyev,
+                   normalv: normalv,
+                   inside: inside)
+  end
 end
 
 class Intersection
@@ -47,20 +63,16 @@ class Intersection
     @t = t
   end
 
-  def object
-    @object
-  end
+  attr_reader :object
 
-  def t
-    @t 
-  end
+  attr_reader :t
 
   def self.intersections(*args)
     args
   end
 
   def self.hit(xs)
-    xs.reject {|x| x.t < 0}
-      .min {|xs1, xs2| xs1.t <=> xs2.t }
+    xs.reject { |x| x.t < 0 }
+      .min_by(&:t)
   end
 end

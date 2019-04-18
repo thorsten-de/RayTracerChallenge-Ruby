@@ -8,7 +8,7 @@ module TransformationsHelper
   def scaling(x, y, z)
     Transformations.scaling(x, y, z)
   end
-  
+
   def rotation(axis, r)
     Transformations.rotation(axis.to_sym, r)
   end
@@ -20,13 +20,13 @@ module TransformationsHelper
   def m
     (@_m ||= {})
   end
-  
+
   POINT_MAP = {
-    "0" => 0,
-    "√2/2" => Math.sqrt(2) / 2, 
-    "-√2/2" => -Math.sqrt(2) / 2
-  }
-  
+    '0' => 0,
+    '√2/2' => Math.sqrt(2) / 2,
+    '-√2/2' => -Math.sqrt(2) / 2
+  }.freeze
+
   def point_from_strings(x, y, z)
     point(POINT_MAP[x], POINT_MAP[y], POINT_MAP[z])
   end
@@ -34,47 +34,47 @@ end
 
 World TransformationsHelper
 
-Given("transform ← translation\\({int}, {int}, {int})") do |x, y, z|
+Given('transform ← translation\\({int}, {int}, {int})') do |x, y, z|
   @transform = translation(x, y, z)
 end
 
-Then("transform * p = point\\({int}, {int}, {int})") do |x, y, z|
-expect_tuple_equals(
-  @transform * @p,
-  point(x, y, z)
-)
+Then('transform * p = point\\({int}, {int}, {int})') do |x, y, z|
+  expect_tuple_equals(
+    @transform * @p,
+    point(x, y, z)
+  )
 end
 
-Given("inv ← inverse\\(transform)") do
+Given('inv ← inverse\\(transform)') do
   @inv = @transform.inverse
 end
 
-Then("inv * p = point\\({int}, {int}, {int})") do |x, y, z|
+Then('inv * p = point\\({int}, {int}, {int})') do |x, y, z|
   expect_tuple_equals(
     @inv * @p,
     point(x, y, z)
   )
 end
 
-Then("transform * v = v") do
+Then('transform * v = v') do
   expect_tuple_equals(
     @transform * @v,
     @v
   )
 end
 
-Given("transform ← scaling\\({int}, {int}, {int})") do |x, y, z|
+Given('transform ← scaling\\({int}, {int}, {int})') do |x, y, z|
   @transform = scaling(x, y, z)
 end
 
-Then("transform * v = vector\\({int}, {int}, {int})") do |x, y, z|
+Then('transform * v = vector\\({int}, {int}, {int})') do |x, y, z|
   expect_tuple_equals(
     @transform * @v,
     vector(x, y, z)
   )
 end
 
-Then("inv * v = vector\\({int}, {int}, {int})") do |x, y, z|
+Then('inv * v = vector\\({int}, {int}, {int})') do |x, y, z|
   expect_tuple_equals(
     @inv * @v,
     vector(x, y, z)
@@ -89,33 +89,32 @@ Given("full_quarter ← rotation\\({string}, π \/ {int})") do |axis, pi_fract|
   @fq = rotation(axis, Math::PI / pi_fract)
 end
 
-
-Then("half_quarter * p = point\\({string}, {string}, {string})") do |x, y, z|
+Then('half_quarter * p = point\\({string}, {string}, {string})') do |x, y, z|
   expect_tuple_equals(
     @hq * @p,
     point_from_strings(x, y, z)
   )
 end
 
-Then("full_quarter * p = point\\({int}, {int}, {int})") do |x, y, z|
+Then('full_quarter * p = point\\({int}, {int}, {int})') do |x, y, z|
   expect_tuple_equals(
     @fq * @p,
     point(x, y, z)
   )
 end
 
-Given("inv ← inverse\\(half_quarter)") do
+Given('inv ← inverse\\(half_quarter)') do
   @inv = @hq.inverse
 end
 
-Then("inv * p = point\\({string}, {string}, {string})") do |x, y, z|
+Then('inv * p = point\\({string}, {string}, {string})') do |x, y, z|
   expect_tuple_equals(
     @inv * @p,
     point_from_strings(x, y, z)
   )
 end
 
-Given("transform ← shearing\\({int}, {int}, {int}, {int}, {int}, {int})") do |sxy, sxz, syx, syz, szx, szy|
+Given('transform ← shearing\\({int}, {int}, {int}, {int}, {int}, {int})') do |sxy, sxz, syx, syz, szx, szy|
   @transform = shearing(sxy, sxz, syx, syz, szx, szy)
 end
 
@@ -123,32 +122,62 @@ Given("M{int} ← rotation\\({string}, π \/ {num})") do |i, axis, pi_fract|
   m[i] = rotation(axis, Math::PI / pi_fract)
 end
 
-Given("M{int} ← scaling\\({num}, {num}, {num})") do |i, x, y, z|
-  m[i] = scaling(x,y,z)
+Given('M{int} ← scaling\\({num}, {num}, {num})') do |i, x, y, z|
+  m[i] = scaling(x, y, z)
 end
 
-Given("M{int} ← translation\\({num}, {num}, {num})") do |i, x, y, z|
+Given('M{int} ← translation\\({num}, {num}, {num})') do |i, x, y, z|
   m[i] = translation(x, y, z)
 end
 
-When("p{int} ← M{int} * p{int}") do |p_j, m_i, p_i|
+When('p{int} ← M{int} * p{int}') do |p_j, m_i, p_i|
   put(:p, p_j, m[m_i] * get(:p, p_i))
 end
 
-Then("p{int} = point\\({int}, {int}, {int})") do |i, x, y, z|
+Then('p{int} = point\\({int}, {int}, {int})') do |i, x, y, z|
   expect_tuple_equals(
     get(:p, i),
     point(x, y, z)
   )
 end
 
-When("T ← M{int} * M{int} * M{int}") do |i, j, k|
+When('T ← M{int} * M{int} * M{int}') do |i, j, k|
   @t = m[i] * m[j] * m[k]
 end
 
-Then("T * p = point\\({int}, {int}, {int})") do |x, y, z|
+Then('T * p = point\\({int}, {int}, {int})') do |x, y, z|
   expect_tuple_equals(
     @t * @p,
     point(x, y, z)
   )
+end
+
+Given('from ← {point}') do |point|
+  @from = point
+end
+
+Given('to ← {point}') do |point|
+  @to = point
+end
+
+Given('up ← {vector}') do |vector|
+  @up = vector
+end
+
+When('t ← view_transform\(from, to, up)') do
+  @t = Transformations.view_transform(@from, @to, @up)
+end
+
+Then('t = identity_matrix') do
+  matrix_equals(@t, identity_matrix)
+end
+Then('t = scaling\({num}, {num}, {num})') do |x, y, z|
+  matrix_equals(@t, scaling(x, y, z))
+end
+
+Then('t = translation\({num}, {num}, {num})') do |x, y, z|
+  matrix_equals(@t, translation(x, y, z))
+end
+Then('t is the following {int}x{int} matrix:') do |m, n, data|
+  matrix_equals(@t, matrix_mn(n, m, data))
 end

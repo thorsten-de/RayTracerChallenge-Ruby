@@ -1,11 +1,8 @@
 module SphereHelper
   include BaseHelper
-
-
 end
 
 World SphereHelper
-
 
 
 When("n ← normal_at\\(s, {point})") do |p|
@@ -45,7 +42,7 @@ When("r ← reflect\\(v, n)") do
 end
 
 Then("r = {vector}") do |v|
-  expect_tuple_equals(@r,v )
+  expect_tuple_equals(@r,v)
 end
 
 Given("n ← vector\\({frac}, {frac}, {num})") do |x, y, z|

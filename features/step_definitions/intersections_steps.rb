@@ -1,0 +1,33 @@
+World BaseHelper
+
+When('comps ← prepare_computations\(i, r)') do
+  @comps = @r.prepare_computations(@i)
+end
+
+Then('comps.t = i.t') do
+  expect(@comps.t).to eq(@i.t)
+end
+
+Then('comps.object = i.object') do
+  expect(@comps.object).to eq(@i.object)
+end
+
+Then('comps.point = {point}') do |point|
+  expect(@comps.point).to eq(point)
+end
+
+Then('comps.eyev = {vector}') do |vector|
+  expect(@comps.eyev).to eq(vector)
+end
+
+Then('comps.normalv = {vector}') do |vector|
+  expect(@comps.normalv).to eq(vector)
+end
+
+Then('comps.inside = false') do
+  expect(@comps.inside).to be(false)
+end
+
+Then('comps.inside = true') do
+  expect(@comps.inside).to be(true)
+end
