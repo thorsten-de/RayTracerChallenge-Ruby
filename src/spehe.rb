@@ -11,7 +11,7 @@ class Sphere
 
   def transform=(m)
     @transform = m
-    @_inverse = nil
+    @inverse_transform = nil
   end
 
   def inverse_transform

@@ -31,3 +31,11 @@ end
 Then('comps.inside = true') do
   expect(@comps.inside).to be(true)
 end
+
+Then('comps.over_point.z < -EPSILON\/2') do
+  expect(@comps.over_point.z).to be < -EPSILON / 2
+end
+
+Then('comps.point.z > comps.over_point.z') do
+  expect(@comps.point.z).to be > @comps.over_point.z
+end

@@ -59,7 +59,7 @@ world = World.new(
   ]
 )
 
-camera = Camera.new(600, 300, Math::PI / 3)
+camera = Camera.new(200, 100, Math::PI / 3)
 camera.transform = Transformations.view_transform(Tuple.point(0, 1.5, -5),
                                                   Tuple.point(0, 1, 0),
                                                   Tuple.vector(0, 1, 0))

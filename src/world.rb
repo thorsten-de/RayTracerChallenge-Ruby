@@ -41,9 +41,10 @@ class World
     lights.reduce(Color::BLACK) do |color, light|
       color + PhongShader.lightning(comps.object.material,
                                     light,
-                                    comps.point,
+                                    comps.over_point,
                                     comps.eyev,
-                                    comps.normalv)
+                                    comps.normalv,
+                                    is_shadowed(comps.over_point, light))
     end
   end
 
@@ -54,6 +55,20 @@ class World
       shade_hit(comps)
     else
       @universe_background
+    end
+  end
+
+  def is_shadowed(point, source = light)
+    point_to_light = source.position - point
+    distance = point_to_light.magnitude
+
+    ray = Ray.new(point, point_to_light.normalize)
+
+    xs = intersect(ray)
+    if (hit = Intersection.hit(xs))
+      hit.t < distance
+    else
+      false
     end
   end
 end

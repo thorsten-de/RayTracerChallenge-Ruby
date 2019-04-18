@@ -1,6 +1,7 @@
 require 'rspec/expectations'
+require_relative '../../raytracer.rb'
 
-EPSILON = 0.0001
+EPSILON = RayTracer::EPSILON
 
 RSpec::Matchers.define :eps do |expected|
   match do |actual|

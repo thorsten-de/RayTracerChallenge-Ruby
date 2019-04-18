@@ -1,5 +1,5 @@
 module PhongShader
-  def self.lightning(material, light, point, eyev, normalv)
+  def self.lightning(material, light, point, eyev, normalv, in_shadow = false)
     effective_color = material.color.product(light.intensity)
 
     lightv = (light.position - point).normalize
@@ -20,6 +20,6 @@ module PhongShader
       end
     end
 
-    ambient + diffuse + specular
+    in_shadow ? ambient : ambient + diffuse + specular
   end
 end

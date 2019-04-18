@@ -24,7 +24,11 @@ module WorldHelper
                         },
     'transform' => lambda { |obj, tuple|
       x, y, z = str_to_f(tuple)
-      obj.transform = Transformations.scaling(x, y, z)
+      obj.transform = if tuple.start_with?('translation')
+                        Transformations.translation(x, y, z)
+                      elsif tuple.start_with?('scaling')
+                        Transformations.scaling(x, y, z)
+                      end
     }
   }.freeze
 
@@ -111,4 +115,20 @@ end
 
 Then('c = inner.material.color') do
   expect_tuple_equals(@c, @inner.material.color)
+end
+
+Then('is_shadowed\(w, p) is {bool}') do |bool|
+  expect(@w.is_shadowed(@p)).to be(bool)
+end
+
+Given('s{int} ← sphere') do |int|
+  s[int] = Sphere.new
+end
+
+Given('s{int} is added to w') do |int|
+  @w.objects << s[int]
+end
+
+Given('i ← intersection\({num}, s{int})') do |t, int|
+  @i = Intersection.new(t, s[int])
 end

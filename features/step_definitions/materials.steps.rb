@@ -50,3 +50,10 @@ end
 Then('result = {color}') do |color|
   expect_tuple_equals(@result, color)
 end
+Given('in_shadow ← true') do
+  @in_sahdow = true
+end
+
+When('result ← lighting\(m, light, position, eyev, normalv, in_shadow)') do
+  @result = PhongShader.lightning(@m, @light, @position, @eye, @normalv, @in_sahdow)
+end

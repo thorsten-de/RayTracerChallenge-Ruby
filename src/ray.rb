@@ -51,6 +51,7 @@ class Ray
     OpenStruct.new(t: xs.t,
                    object: xs.object,
                    point: point,
+                   over_point: point + normalv * RayTracer::EPSILON,
                    eyev: eyev,
                    normalv: normalv,
                    inside: inside)
