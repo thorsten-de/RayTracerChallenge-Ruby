@@ -7,7 +7,6 @@ module CanvasHelper
 end
 
 World CanvasHelper
-
 Given('c ← canvas\({int}, {int})') do |width, height|
   @c = canvas(width, height)
 end

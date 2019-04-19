@@ -1,16 +1,15 @@
-class Sphere
-  attr_accessor(:material, :origin)
+class Shape
+  attr_accessor :material
+  attr_reader :transform
 
   def initialize(opts = {})
     @transform = opts[:transform] || Matrix.identity
-    @origin = Tuple.point(0.0, 0.0, 0.0)
     @material = opts[:material] || Material.new
+    @origin = Tuple.point(0.0, 0.0, 0.0)
   end
 
-  attr_reader :transform
-
-  def transform=(m)
-    @transform = m
+  def transform=(matrix)
+    @transform = matrix
     @inverse_transform = nil
   end
 
@@ -18,24 +17,51 @@ class Sphere
     @inverse_transform ||= @transform.inverse
   end
 
-  def intersect(original_ray)
-    original_ray
-      .transform(inverse_transform)
-      .intersect(self)
+  def intersect(ray)
+    local_ray = ray.transform(inverse_transform)
+    local_intersect(local_ray)
   end
 
-  def normal_at(world_p)
-    object_p = inverse_transform * world_p
-    object_normal = object_p - origin
+  def local_intersect(ray); end
 
+  def normal_at(point)
+    object_point = inverse_transform * point
+
+    object_normal = local_normal_at(object_point)
     world_normal = inverse_transform.transpose * object_normal
     world_normal.w = 0
     world_normal.normalize
   end
 
+  def local_normal_at(point); end
+end
+
+class TestShape < Shape
+  attr_reader :saved_ray
+  def local_intersect(ray)
+    @saved_ray = ray
+  end
+
+  def local_normal_at(p)
+    Tuple.vector(p.x, p.y, p.z)
+  end
+end
+
+class Sphere < Shape
+  def initialize(opts = {})
+    super(opts)
+  end
+
+  def local_intersect(ray)
+    ray.intersect(self)
+  end
+
+  def local_normal_at(object_p)
+    object_p - @origin
+  end
+
   def ==(other)
-    @origin == other.origin &&
-      @material == other.material &&
+    @material == other.material &&
       @transform == other.transform
   end
 end
