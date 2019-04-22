@@ -22,7 +22,9 @@ class Shape
     local_intersect(local_ray)
   end
 
-  def local_intersect(ray); end
+  def local_intersect(_ray)
+    throw NotImplementedError
+  end
 
   def normal_at(point)
     object_point = inverse_transform * point
@@ -33,7 +35,9 @@ class Shape
     world_normal.normalize
   end
 
-  def local_normal_at(point); end
+  def local_normal_at(_point)
+    throw NotImplementedError
+  end
 end
 
 class TestShape < Shape
