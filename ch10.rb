@@ -1,7 +1,8 @@
 require_relative './raytracer.rb'
 floor_material = Material.new(
   color: Tuple.color(1, 0.9, 0.9),
-  specular: 0
+  specular: 0,
+  pattern: Pattern.checkers(Color::WHITE, Color::BLACK)
 )
 world = World.new(
   lights: [Light.point_light(Tuple.point(10, 4, -10), Tuple.color(1, 1, 1))],
@@ -31,7 +32,7 @@ world = World.new(
         color: Tuple.color(0.1, 1.0, 0.5),
         diffuse: 0.7,
         specular: 0.3,
-        pattern: Pattern.stripes(COLOR::WHITE, Color::BLACK )
+        pattern: Pattern.gradient(Color::WHITE, Tuple.color(0.1, 1.0, 0.5))
       )
     ),
     # Right
@@ -41,7 +42,8 @@ world = World.new(
       material: Material.new(
         color: Tuple.color(0.5, 1.0, 0.1),
         diffuse: 0.7,
-        specular: 0.3
+        specular: 0.3,
+        Pattern: Pattern.stripes(Color::WHITE, Tuple.color(0.5, 1.0, 0.1))
       )
     ),
     # Left
@@ -57,7 +59,7 @@ world = World.new(
   ]
 )
 
-camera = Camera.new(192, 108, Math::PI / 3)
+camera = Camera.new(1920, 1080, Math::PI / 3)
 camera.transform = Transformations.view_transform(Tuple.point(0, 1.5, -5),
                                                   Tuple.point(0, 1, 0),
                                                   Tuple.vector(0, 1, 0))

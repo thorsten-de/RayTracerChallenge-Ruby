@@ -1,5 +1,3 @@
-require 'noisy'
-
 class Pattern
   attr_reader :transform
 
@@ -68,17 +66,6 @@ class Pattern
                     else
                       b
                     end
-                  }
-                ))
-  end
-
-  def self.perlin_noise(a, b, opts = {})
-    n2d = Noisy::Noisy.new
-    distance = b - a
-    Pattern.new(opts.merge(
-                  f: lambda { |p|
-                    fraction = n2d.perlin_noise_2d(p.x, p.z).abs
-                    a + distance * fraction
                   }
                 ))
   end
