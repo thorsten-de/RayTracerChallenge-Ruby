@@ -1,5 +1,7 @@
 class Material
-  attr_accessor(:color, :ambient, :diffuse, :specular, :shininess, :pattern)
+  attr_accessor(:color, :ambient, :diffuse,
+                :specular, :shininess, :pattern,
+                :reflective)
 
   def initialize(opts = {})
     @color = opts[:color] || Tuple.color(1.0, 1.0, 1.0)
@@ -8,6 +10,7 @@ class Material
     @specular = opts[:specular] || 0.9
     @shininess = opts[:shininess] || 200.0
     @pattern = opts[:pattern]
+    @reflective = opts[:reflective] || 0.0
   end
 
   def ==(other)
@@ -15,6 +18,8 @@ class Material
       @ambient == other.ambient &&
       @diffuse == other.diffuse &&
       @specular == other.specular &&
-      @shininess == other.shininess
+      @shininess == other.shininess &&
+      @pattern == other.pattern &&
+      @reflective == other.reflective
   end
 end

@@ -48,12 +48,15 @@ class Ray
                       else
                         [false, normalv]
     end
+
+    reflectv = direction.reflect(normalv)
     OpenStruct.new(t: xs.t,
                    object: xs.object,
                    point: point,
                    over_point: point + normalv * RayTracer::EPSILON,
                    eyev: eyev,
                    normalv: normalv,
+                   reflectv: reflectv,
                    inside: inside)
   end
 end

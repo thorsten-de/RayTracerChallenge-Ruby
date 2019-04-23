@@ -18,6 +18,7 @@ module WorldHelper
   PROPERTY_SETTERS = {
     'material.diffuse' => ->(obj, value) { obj.material.diffuse = value.to_f },
     'material.specular' => ->(obj, value) { obj.material.specular = value.to_f },
+    'material.reflective' => ->(obj, value) { obj.material.reflective = value.to_f },
     'material.color' => lambda { |obj, tuple|
                           r, g, b = str_to_f(tuple)
                           obj.material.color = Tuple.color(r, g, b)
@@ -131,4 +132,39 @@ end
 
 Given('i ← intersection\({num}, s{int})') do |t, int|
   @i = Intersection.new(t, s[int])
+end
+
+Given('s.material.ambient ← {num}') do |num|
+  @s.material.ambient = num
+end
+
+When('c ← reflected_color\(w, comps)') do
+  @c = @w.reflected_color(@comps)
+end
+
+Given('shape ← plane with:') do |table|
+  # table is a Cucumber::MultilineArgument::DataTable
+
+  @shape = Plane.new
+  data = table.rows_hash
+  data.each { |key, value| set_property(@shape, key, value) }
+end
+
+Given('shape is added to w') do
+  @w.objects << @shape
+end
+
+Given('s{int} ← plane with:') do |i, table|
+  # table is a Cucumber::MultilineArgument::DataTable
+  data = table.rows_hash
+  s[i] = sp = Plane.new
+  data.each { |key, value| set_property(sp, key, value) }
+end
+
+Then('color_at\(w, r) should terminate successfully') do
+  expect { @w.color_at(@r) }.not_to raise_error
+end
+
+When('c ← reflected_color\(w, comps, {int})') do |int|
+  @c = @w.reflected_color(@comps, int)
 end

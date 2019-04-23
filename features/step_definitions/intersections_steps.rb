@@ -39,3 +39,7 @@ end
 Then('comps.point.z > comps.over_point.z') do
   expect(@comps.point.z).to be > @comps.over_point.z
 end
+
+Then('comps.reflectv = {vector}') do |vector|
+  expect(@comps.reflectv).to eq(vector)
+end

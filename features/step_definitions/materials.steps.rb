@@ -30,16 +30,12 @@ Then('m.shininess = {num}') do |num|
   expect(@m.shininess).to eq(num)
 end
 
-Given('eyev ← {vector}') do |vector|
-  @eye = vector
-end
-
 Given('normalv ← {vector}') do |vector|
   @normalv = vector
 end
 
-Given('eyev ← vector\\({num}, {frac}, {frac})') do |x, y, z|
-  @eye = vector(x, y, z)
+Given('eyev ← {vector}') do |v|
+  @eye = v
 end
 
 Given('light ← point_light\\({point}, {color})') do |point, color|
@@ -79,4 +75,26 @@ end
 
 Then('c{int} = {color}') do |i, color|
   expect(c[i]).to eq(color)
+end
+
+Then('m.reflective = {num}') do |num|
+  expect(@m.reflective).to eq(num)
+end
+
+Given('r ← ray\({point}, v)') do |origin|
+  @r = Ray.new(origin, @v)
+end
+
+Given('shape ← plane') do
+  @shape = Plane.new
+end
+
+Given('i ← intersection\({frac}, shape)') do |t|
+  @i = Intersection.new(t, @shape)
+end
+
+Then('comps.reflectv = vector\({frac}, {frac}, {frac})') do |x, y, z|
+  # Then("comps.reflectv = vector\({frac}, {frac}, {frac})") do |frac, frac2, frac3|
+  # Then("comps.reflectv = vector\({num}, {frac}, {frac})") do |num, frac, frac2|
+  expect(@comps.reflectv).to eq(vector(x, y, z))
 end

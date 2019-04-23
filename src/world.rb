@@ -37,23 +37,25 @@ class World
             .sort_by(&:t)
   end
 
-  def shade_hit(comps)
-    lights.reduce(Color::BLACK) do |color, light|
+  def shade_hit(comps, remaining = 5)
+    surface = lights.reduce(Color::BLACK) do |color, light|
       color + PhongShader.lightning(comps.object.material,
-        comps.object,
+                                    comps.object,
                                     light,
                                     comps.over_point,
                                     comps.eyev,
                                     comps.normalv,
                                     is_shadowed(comps.over_point, light))
     end
+    reflected = reflected_color(comps, remaining)
+    surface + reflected
   end
 
-  def color_at(ray)
+  def color_at(ray, remaining = 5)
     intersections = intersect(ray)
     if (hit = Intersection.hit(intersections))
       comps = ray.prepare_computations(hit)
-      shade_hit(comps)
+      shade_hit(comps, remaining)
     else
       @universe_background
     end
@@ -71,5 +73,14 @@ class World
     else
       false
     end
+  end
+
+  def reflected_color(comps, remaining = 5)
+    reflective = comps.object.material.reflective
+
+    return Color::BLACK if remaining == 0 || reflective == 0.0
+
+    ray = Ray.new(comps.over_point, comps.reflectv)
+    color_at(ray, remaining - 1) * reflective
   end
 end
