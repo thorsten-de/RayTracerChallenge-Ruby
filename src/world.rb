@@ -40,6 +40,7 @@ class World
   def shade_hit(comps)
     lights.reduce(Color::BLACK) do |color, light|
       color + PhongShader.lightning(comps.object.material,
+        comps.object,
                                     light,
                                     comps.over_point,
                                     comps.eyev,

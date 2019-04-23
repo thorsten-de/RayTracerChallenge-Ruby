@@ -1,6 +1,7 @@
 module PhongShader
-  def self.lightning(material, light, point, eyev, normalv, in_shadow = false)
-    effective_color = material.color.product(light.intensity)
+  def self.lightning(material, object, light, point, eyev, normalv, in_shadow = false)
+    color = material.pattern ? material.pattern.pattern_at_shape(object, point) : material.color
+    effective_color = color.product(light.intensity)
 
     lightv = (light.position - point).normalize
 

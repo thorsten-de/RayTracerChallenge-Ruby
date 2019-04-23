@@ -148,4 +148,5 @@ end
 
 module Color
   BLACK = Tuple.color(0.0, 0.0, 0.0)
+  WHITE = Tuple.color(1.0, 1.0, 1.0)
 end

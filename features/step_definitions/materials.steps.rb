@@ -1,4 +1,7 @@
 module MaterialsHelper
+  def c
+    (@__c ||= {})
+    end
 end
 
 World BaseHelper, MaterialsHelper
@@ -44,7 +47,7 @@ Given('light ← point_light\\({point}, {color})') do |point, color|
 end
 
 When('result ← lighting\\(m, light, position, eyev, normalv)') do
-  @result = PhongShader.lightning(@m, @light, @position, @eye, @normalv)
+  @result = PhongShader.lightning(@m, TestShape.new, @light, @position, @eye, @normalv)
 end
 
 Then('result = {color}') do |color|
@@ -55,5 +58,25 @@ Given('in_shadow ← true') do
 end
 
 When('result ← lighting\(m, light, position, eyev, normalv, in_shadow)') do
-  @result = PhongShader.lightning(@m, @light, @position, @eye, @normalv, @in_sahdow)
+  @result = PhongShader.lightning(@m, TestShape.new, @light, @position, @eye, @normalv, @in_sahdow)
+end
+
+Given('m.pattern ← stripe_pattern\({color}, {color})') do |c1, c2|
+  @m.pattern = stripe_pattern(c1, c2)
+end
+
+Given('m.diffuse ← {num}') do |num|
+  @m.diffuse = num
+end
+
+Given('m.specular ← {num}') do |num|
+  @m.specular = num
+end
+
+When('c{int} ← lighting\(m, light, {point}, eyev, normalv, {bool})') do |i, p, in_shadow|
+  c[i] = PhongShader.lightning(@m, TestShape.new, @light, p, @eye, @normalv, in_shadow)
+end
+
+Then('c{int} = {color}') do |i, color|
+  expect(c[i]).to eq(color)
 end

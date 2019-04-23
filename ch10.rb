@@ -30,7 +30,8 @@ world = World.new(
       material: Material.new(
         color: Tuple.color(0.1, 1.0, 0.5),
         diffuse: 0.7,
-        specular: 0.3
+        specular: 0.3,
+        pattern: Pattern.stripes(COLOR::WHITE, Color::BLACK )
       )
     ),
     # Right
