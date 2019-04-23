@@ -43,3 +43,19 @@ end
 Then('comps.reflectv = {vector}') do |vector|
   expect(@comps.reflectv).to eq(vector)
 end
+
+Given('xs ← intersections\(i)') do
+  @xs = [@i]
+end
+
+When('comps ← prepare_computations\(i, r, xs)') do
+  @comps = @r.prepare_computations(@i, @xs)
+end
+
+Then('comps.under_point.z > EPSILON\/2') do
+  expect(@comps.under_point.z).to be > EPSILON / 2
+end
+
+Then('comps.point.z < comps.under_point.z') do
+  expect(@comps.point.z).to be < @comps.under_point.z
+end

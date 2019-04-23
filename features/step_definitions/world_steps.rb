@@ -16,9 +16,15 @@ module WorldHelper
   end
 
   PROPERTY_SETTERS = {
+    'material.ambient' => ->(obj, value) { obj.material.ambient = value.to_f },
     'material.diffuse' => ->(obj, value) { obj.material.diffuse = value.to_f },
     'material.specular' => ->(obj, value) { obj.material.specular = value.to_f },
     'material.reflective' => ->(obj, value) { obj.material.reflective = value.to_f },
+    'material.refractive_index' => ->(obj, value) { obj.material.refractive_index = value.to_f },
+    'material.transparency' => ->(obj, value) { obj.material.transparency = value.to_f },
+    'material.pattern' => lambda { |obj, _value|
+      obj.material.pattern = Pattern.test_pattern
+    },
     'material.color' => lambda { |obj, tuple|
                           r, g, b = str_to_f(tuple)
                           obj.material.color = Tuple.color(r, g, b)
@@ -35,6 +41,10 @@ module WorldHelper
 
   def set_property(object, key, value)
     PROPERTY_SETTERS[key].call(object, value)
+  end
+
+  def read_property_table(obj, table)
+    table.rows_hash.each { |key, value| set_property(obj, key, value) }
   end
 end
 
@@ -83,7 +93,8 @@ When('c ← shade_hit\(w, comps)') do
 end
 
 Then('c = {color}') do |color|
-  expect_tuple_equals(@c, color)
+  # expect_tuple_equals(@c, color)
+  expect(@c).to eq(color)
 end
 
 Given('w.light ← point_light\({point}, {color})') do |point, color|
@@ -167,4 +178,87 @@ end
 
 When('c ← reflected_color\(w, comps, {int})') do |int|
   @c = @w.reflected_color(@comps, int)
+end
+
+Given('shape ← the first object in w') do
+  @shape = @w.objects.first
+end
+
+Given('xs ← intersections\({int}:shape, {int}:shape)') do |t1, t2|
+  @xs = [
+    Intersection.new(t1, @shape),
+    Intersection.new(t2, @shape)
+  ]
+end
+
+When('c ← refracted_color\(w, comps, {int})') do |i|
+  @c = @w.refracted_color(@comps, i)
+end
+
+Given('shape has:') do |table|
+  # table is a Cucumber::MultilineArgument::DataTable
+  read_property_table(@shape, table)
+end
+
+Given('xs ← intersections\({frac}:shape, {frac}:shape)') do |t1, t2|
+  @xs = [
+    Intersection.new(t1, @shape),
+    Intersection.new(t2, @shape)
+  ]
+end
+
+Given('A ← the first object in w') do
+  @a = @w.objects[0]
+end
+
+Given('A has:') do |table|
+  read_property_table(@a, table)
+end
+
+Given('B ← the second object in w') do
+  @b = @w.objects[1]
+end
+
+Given('B has:') do |table|
+  # table is a Cucumber::MultilineArgument::DataTable
+  read_property_table(@b, table)
+end
+
+Given('xs ← intersections\({num}:A, {num}:B, {num}:B, {num}:A)') do |t1, t2, t3, t4|
+  @xs = [
+    Intersection.new(t1, @a),
+    Intersection.new(t2, @b),
+    Intersection.new(t3, @b),
+    Intersection.new(t4, @a)
+  ]
+end
+
+Given('floor ← plane with:') do |table|
+  # table is a Cucumber::MultilineArgument::DataTable
+  @floor = Plane.new
+  read_property_table(@floor, table)
+end
+
+Given('floor is added to w') do
+  @w.objects << @floor
+end
+
+Given('ball ← sphere with:') do |table|
+  # table is a Cucumber::MultilineArgument::DataTable
+  @ball = Sphere.new
+  read_property_table(@ball, table)
+end
+
+Given('ball is added to w') do
+  @w.objects << @ball
+end
+
+Given('xs ← intersections\({frac}:floor)') do |t|
+  @xs = [
+    Intersection.new(t, @floor)
+  ]
+end
+
+When('c ← shade_hit\(w, comps, {int})') do |int|
+  @c = @w.shade_hit(@comps, int)
 end

@@ -51,3 +51,13 @@ Feature: Intersections
     And i ← intersection(√2, shape)
     When comps ← prepare_computations(i, r)
     Then comps.reflectv = vector(0, √2/2, √2/2)
+
+  Scenario: The under point is offset below the surface
+    Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
+    And s1 ← sphere with:
+      | transform | translation(0, 0, 1) |
+    And i ← intersection(5, s1)
+    And xs ← intersections(i)
+    When comps ← prepare_computations(i, r, xs)
+    Then comps.under_point.z > EPSILON/2
+    And comps.point.z < comps.under_point.z

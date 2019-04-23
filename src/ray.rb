@@ -38,7 +38,7 @@ class Ray
     end
   end
 
-  def prepare_computations(xs)
+  def prepare_computations(xs, intersections = [xs])
     point = position(xs.t)
     eyev = -@direction
     normalv = xs.object.normal_at(point)
@@ -49,14 +49,47 @@ class Ray
                         [false, normalv]
     end
 
+    # Reflection
     reflectv = direction.reflect(normalv)
+
+    # Refraction
+    containers = []
+    n1 = nil
+    n2 = nil
+    intersections.each do |i|
+      if i == xs
+        n1 = if containers.empty?
+               1.0
+             else
+               containers.last.material.refractive_index
+              end
+          end
+
+      if containers.include? i.object
+        containers.delete(i.object)
+      else
+        containers << i.object
+      end
+
+      next unless i == xs
+
+      n2 = if containers.empty?
+             1.0
+           else
+             containers.last.material.refractive_index
+        end
+      break
+    end
     OpenStruct.new(t: xs.t,
                    object: xs.object,
                    point: point,
                    over_point: point + normalv * RayTracer::EPSILON,
+                   under_point: point - normalv * RayTracer::EPSILON,
                    eyev: eyev,
                    normalv: normalv,
                    reflectv: reflectv,
+                   n1: n1,
+                   n2: n2,
                    inside: inside)
   end
 end

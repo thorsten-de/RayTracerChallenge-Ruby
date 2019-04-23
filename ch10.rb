@@ -33,7 +33,7 @@ world = World.new(
         color: Tuple.color(0.1, 1.0, 0.5),
         diffuse: 0.7,
         specular: 0.3,
-        reflective: 0.8,
+        reflective: 0.0,
         pattern: Pattern.gradient(Color::WHITE, Tuple.color(0.1, 1.0, 0.5))
       )
     ),
@@ -56,6 +56,8 @@ world = World.new(
       material: Material.new(
         color: Tuple.color(1, 0.8, 0.1),
         diffuse: 0.7,
+        refractive_index: 1.5,
+        transparent: 0.8,
         specular: 0.3
       )
     )

@@ -93,8 +93,10 @@ Given('i ← intersection\({frac}, shape)') do |t|
   @i = Intersection.new(t, @shape)
 end
 
-Then('comps.reflectv = vector\({frac}, {frac}, {frac})') do |x, y, z|
-  # Then("comps.reflectv = vector\({frac}, {frac}, {frac})") do |frac, frac2, frac3|
-  # Then("comps.reflectv = vector\({num}, {frac}, {frac})") do |num, frac, frac2|
-  expect(@comps.reflectv).to eq(vector(x, y, z))
+Then('m.transparency = {num}') do |num|
+  expect(@m.transparency).to eq(num)
+end
+
+Then('m.refractive_index = {num}') do |num|
+  expect(@m.refractive_index).to eq(num)
 end

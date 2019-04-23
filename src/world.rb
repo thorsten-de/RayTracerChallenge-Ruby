@@ -48,13 +48,15 @@ class World
                                     is_shadowed(comps.over_point, light))
     end
     reflected = reflected_color(comps, remaining)
-    surface + reflected
+    refracted = refracted_color(comps, remaining)
+    p(surface: surface.data, reflected: reflected.data, refracted: refracted.data)
+    surface + reflected + refracted
   end
 
   def color_at(ray, remaining = 5)
     intersections = intersect(ray)
     if (hit = Intersection.hit(intersections))
-      comps = ray.prepare_computations(hit)
+      comps = ray.prepare_computations(hit, intersections)
       shade_hit(comps, remaining)
     else
       @universe_background
@@ -82,5 +84,24 @@ class World
 
     ray = Ray.new(comps.over_point, comps.reflectv)
     color_at(ray, remaining - 1) * reflective
+  end
+
+  def refracted_color(comps, remaining = 5)
+    p(p: comps.point.data, eye: comps.eyev.data, norm: comps.normalv.data)
+    n_ratio = comps.n1 / comps.n2
+    cos_i = comps.eyev.dot(comps.normalv)
+    sin2_t = (n_ratio * n_ratio) * (1.0 - (cos_i * cos_i))
+
+    return Color::BLACK if remaining == 0 ||
+                           comps.object.material.transparency == 0.0 ||
+                           sin2_t > 1
+
+    cos_t = Math.sqrt(1.0 - sin2_t)
+
+    direction = (comps.normalv * (n_ratio * cos_i * cos_t)) -
+                (comps.eyev * n_ratio)
+
+    ray = Ray.new(comps.under_point, direction)
+    color_at(ray, remaining - 1) * comps.object.material.transparency
   end
 end
