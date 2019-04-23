@@ -1,17 +1,17 @@
-  module MatrixHelper
+module MatrixHelper
   include BaseHelper
 
   def matrix_mn(m, n, data)
     parsed_data = data
-      .raw
-      .flatten()
-      .map(&:to_f)
+                  .raw
+                  .flatten
+                  .map(&:to_f)
 
     Matrix.new(m, n, parsed_data)
   end
 
   def matrix(data)
-    raw = data.raw    
+    raw = data.raw
     matrix_mn(raw.length, raw[0].length, data)
   end
 
@@ -19,56 +19,56 @@
     Matrix.identity_matrix(4)
   end
 
- 
   def matrix_equals(a, b)
-    a.all_values.zip(b.all_values).map {|ai, bi| expect(ai).to eps(bi)}
+    # a.all_values.zip(b.all_values).map {|ai, bi| expect(ai).to eps(bi)}
+    expect(a).to eps(b)
   end
 
   def matrix_not_equals(a, b)
-    a.all_values.zip(b.all_values).map {|ai, bi| expect(ai).not_to eps(bi)}
+    expect(a).not_to eps(b)
+    # a.all_values.zip(b.all_values).map {|ai, bi| expect(ai).not_to eps(bi)}
   end
 end
 
 World MatrixHelper
 
-Given("the following {int}x{int} matrix M:") do |m, n, table|
+Given('the following {int}x{int} matrix M:') do |m, n, table|
   # table is a Cucumber::MultilineArgument::DataTable
   @m = matrix_mn(m, n, table)
 end
 
-Given("the following {int}x{int} matrix A:") do |m, n, table|
+Given('the following {int}x{int} matrix A:') do |m, n, table|
   # table is a Cucumber::MultilineArgument::DataTable
   @a = matrix_mn(m, n, table)
 end
 
-Then("M[{int},{int}] = {int}") do |i, j, value|
-  expect(@m[i,j]).to eq(value)
+Then('M[{int},{int}] = {int}') do |i, j, value|
+  expect(@m[i, j]).to eq(value)
 end
 
-Then("M[{int},{int}] = {float}") do |i, j, value|
-  expect(@m[i,j]).to eq(value)
+Then('M[{int},{int}] = {float}') do |i, j, value|
+  expect(@m[i, j]).to eq(value)
 end
 
-Given("the following matrix A:") do |table|
+Given('the following matrix A:') do |table|
   # table is a Cucumber::MultilineArgument::DataTable
   @a = matrix(table)
 end
 
-Given("the following matrix B:") do |table|
+Given('the following matrix B:') do |table|
   # table is a Cucumber::MultilineArgument::DataTable
   @b = matrix(table)
 end
 
-Then("A = B") do
+Then('A = B') do
   matrix_equals(@a, @b)
-
 end
 
-Then("A != B") do
+Then('A != B') do
   matrix_not_equals(@a, @b)
 end
 
-Then("A * B is the following {int}x{int} matrix:") do |int, int2, table|
+Then('A * B is the following {int}x{int} matrix:') do |_int, _int2, table|
   # table is a Cucumber::MultilineArgument::DataTable
   matrix_equals(
     @a * @b,
@@ -87,15 +87,14 @@ Then('A * b = tuple\({float}, {float}, {float}, {float})') do |x, y, z, w|
   )
 end
 
-Then("A * identity_matrix = A") do
+Then('A * identity_matrix = A') do
   matrix_equals(
     @a * identity_matrix,
     @a
   )
 end
 
-
-Then("identity_matrix * a = a") do
+Then('identity_matrix * a = a') do
   expect_tuple_equals(
     identity_matrix * @a,
     @a
@@ -111,10 +110,10 @@ Then('transpose\(A) is the following matrix:') do |table|
 end
 
 Given('A ← transpose\(identity_matrix)') do
-  @A = identity_matrix.transpose 
+  @A = identity_matrix.transpose
 end
 
-Then("A = identity_matrix") do
+Then('A = identity_matrix') do
   matrix_equals(
     @A,
     identity_matrix
@@ -125,14 +124,13 @@ Then('determinant\(M) = {int}') do |det|
   expect(@m.determinant).to eq(det)
 end
 
-Then('submatrix\(M, {int}, {int}) is the following {int}x{int} matrix:') do |row, col, int3, int4, table|
+Then('submatrix\(M, {int}, {int}) is the following {int}x{int} matrix:') do |row, col, _int3, _int4, table|
   # table is a Cucumber::MultilineArgument::DataTable
   matrix_equals(
     @m.submatrix(row, col),
     matrix(table)
   )
 end
-
 
 Given('M ← submatrix\(A, {int}, {int})') do |row, col|
   @m = @a.submatrix(row, col)
@@ -146,26 +144,24 @@ Then('cofactor\(A, {int}, {int}) = {int}') do |row, col, expected|
   expect(@a.cofactor(row, col)).to eq(expected)
 end
 
-
 Then('determinant\(A) = {int}') do |expected|
   expect(@a.determinant).to eq(expected)
 end
 
-Then("A is invertible") do
+Then('A is invertible') do
   expect(@a.invertible?).to be(true)
 end
 
-Then("A is not invertible") do
+Then('A is not invertible') do
   expect(@a.invertible?).to be(false)
 end
-
 
 Given('B ← inverse\(A)') do
   @B = @a.inverse
 end
 
 Then('B[{int},{int}] = {int}\/{int}') do |i, j, num, den|
-  expect(@B[i, j]).to eq(num.to_f/den.to_f)
+  expect(@B[i, j]).to eq(num.to_f / den.to_f)
 end
 
 Then('B is the following {int}x{int} matrix:') do |m, n, table|
@@ -189,7 +185,7 @@ Given('the following {int}x{int} matrix B:') do |m, n, table|
   @B = matrix_mn(m, n, table)
 end
 
-Given("C ← A * B") do
+Given('C ← A * B') do
   @C = @a * @B
 end
 

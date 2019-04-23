@@ -5,7 +5,21 @@ EPSILON = RayTracer::EPSILON
 
 RSpec::Matchers.define :eps do |expected|
   match do |actual|
-    (actual - expected).abs < EPSILON
+    case actual
+    when Numeric
+      (actual - expected).abs < EPSILON
+
+    when Tuple
+      data = actual.zip(expected)
+      data.all? do |a, e|
+        (a - e).abs < EPSILON
+      end
+
+    when Matrix
+      actual.all_values.zip(expected.all_values).all? do |a, e|
+        (a - e).abs < EPSILON
+      end
+    end
   end
 end
 
@@ -15,10 +29,7 @@ module BaseHelper
   end
 
   def expect_tuple_equals(v, w)
-    v.zip(w)
-     .map do |v_i, w_i|
-      expect(v_i).to eps(w_i)
-    end
+    expect(v).to eps(w)
   end
 
   def put(type, id, value)

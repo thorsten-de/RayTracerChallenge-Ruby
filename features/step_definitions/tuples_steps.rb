@@ -145,7 +145,7 @@ Then('magnitude\(norm) = {float}') do |expected|
   expect(@norm.magnitude).to be(expected)
 end
 
-Then('dot\(v{int}, v{int}) = {float}') do |i, j, expected|
+Then('dot\(v{int}, v{int}) = {num}') do |i, j, expected|
   expect(get(:v, i).dot(get(:v, j))).to eps(expected)
 end
 

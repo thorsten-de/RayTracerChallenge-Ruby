@@ -144,6 +144,10 @@ class Tuple
   def to_matrix
     Matrix.new(4, 1, @data)
   end
+
+  def inspect
+    ['(', @data.join(', '), ')'].join
+  end
 end
 
 module Color

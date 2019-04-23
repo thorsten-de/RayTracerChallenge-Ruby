@@ -94,7 +94,7 @@ end
 
 Then('c = {color}') do |color|
   # expect_tuple_equals(@c, color)
-  expect(@c).to eq(color)
+  expect(@c).to eps(color)
 end
 
 Given('w.light ← point_light\({point}, {color})') do |point, color|

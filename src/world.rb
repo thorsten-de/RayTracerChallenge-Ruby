@@ -87,11 +87,18 @@ class World
   end
 
   def refracted_color(comps, remaining = 5)
-    p(p: comps.point.data, eye: comps.eyev.data, norm: comps.normalv.data)
     n_ratio = comps.n1 / comps.n2
-    cos_i = comps.eyev.dot(comps.normalv)
+    cos_i = comps.inside ? comps.eyev.dot(comps.normalv) : -comps.eyev.dot(comps.normalv)
     sin2_t = (n_ratio * n_ratio) * (1.0 - (cos_i * cos_i))
-
+    puts remaining
+    p(p: comps.point,
+      eye: comps.eyev,
+      norm: comps.normalv,
+      reflect: comps.reflectv,
+      n_ratio: n_ratio,
+      inside: comps.inside,
+      cos_i: cos_i,
+      sin2_t: sin2_t)
     return Color::BLACK if remaining == 0 ||
                            comps.object.material.transparency == 0.0 ||
                            sin2_t > 1
