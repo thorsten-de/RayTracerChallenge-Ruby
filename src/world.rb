@@ -1,3 +1,4 @@
+require 'byebug'
 class World
   attr_accessor :lights, :objects
 
@@ -49,7 +50,6 @@ class World
     end
     reflected = reflected_color(comps, remaining)
     refracted = refracted_color(comps, remaining)
-    p(surface: surface.data, reflected: reflected.data, refracted: refracted.data)
     surface + reflected + refracted
   end
 
@@ -88,24 +88,16 @@ class World
 
   def refracted_color(comps, remaining = 5)
     n_ratio = comps.n1 / comps.n2
-    cos_i = comps.inside ? comps.eyev.dot(comps.normalv) : -comps.eyev.dot(comps.normalv)
-    sin2_t = (n_ratio * n_ratio) * (1.0 - (cos_i * cos_i))
-    puts remaining
-    p(p: comps.point,
-      eye: comps.eyev,
-      norm: comps.normalv,
-      reflect: comps.reflectv,
-      n_ratio: n_ratio,
-      inside: comps.inside,
-      cos_i: cos_i,
-      sin2_t: sin2_t)
+    cos_i = comps.eyev.dot(comps.normalv)
+    sin2_t = (n_ratio**2) * (1.0 - (cos_i**2))
+
     return Color::BLACK if remaining == 0 ||
                            comps.object.material.transparency == 0.0 ||
                            sin2_t > 1
 
     cos_t = Math.sqrt(1.0 - sin2_t)
 
-    direction = (comps.normalv * (n_ratio * cos_i * cos_t)) -
+    direction = (comps.normalv * (n_ratio * cos_i - cos_t)) -
                 (comps.eyev * n_ratio)
 
     ray = Ray.new(comps.under_point, direction)

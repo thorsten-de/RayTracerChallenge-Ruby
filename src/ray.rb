@@ -41,16 +41,16 @@ class Ray
   def prepare_computations(xs, intersections = [xs])
     point = position(xs.t)
     eyev = -@direction
-    normalv = xs.object.normal_at(point)
+    normal = xs.object.normal_at(point)
 
-    inside, normalv = if normalv.dot(eyev) < 0
-                        [true, -normalv]
+    inside, normalv = if normal.dot(eyev) < 0
+                        [true, -normal]
                       else
-                        [false, normalv]
+                        [false, normal]
     end
 
     # Reflection
-    reflectv = direction.reflect(normalv)
+    reflectv = @direction.reflect(normalv)
 
     # Refraction
     containers = []
@@ -85,8 +85,10 @@ class Ray
                    point: point,
                    over_point: point + normalv * RayTracer::EPSILON,
                    under_point: point - normalv * RayTracer::EPSILON,
+                   direction: @direction,
                    eyev: eyev,
                    normalv: normalv,
+                   original_normal: normal,
                    reflectv: reflectv,
                    n1: n1,
                    n2: n2,

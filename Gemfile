@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-# gem "rails"
+gem 'byebug'
 
 group :test do
   gem 'cucumber', '3.1.0'

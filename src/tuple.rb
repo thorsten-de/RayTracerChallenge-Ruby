@@ -93,7 +93,7 @@ class Tuple
   end
 
   def reflect(normal)
-    self - normal * 2 * dot(normal)
+    self - (normal * 2 * dot(normal))
   end
 
   def zip_map(other)

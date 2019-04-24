@@ -3,6 +3,7 @@ GEM
   specs:
     backports (3.13.0)
     builder (3.2.3)
+    byebug (11.0.1)
     cucumber (3.1.0)
       builder (>= 2.1.2)
       cucumber-core (~> 3.1.0)
@@ -42,6 +43,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   cucumber (= 3.1.0)
   irb
   rspec
