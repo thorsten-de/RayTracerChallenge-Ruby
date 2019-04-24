@@ -50,7 +50,14 @@ class World
     end
     reflected = reflected_color(comps, remaining)
     refracted = refracted_color(comps, remaining)
-    surface + reflected + refracted
+    material = comps.object.material
+
+    if material.reflective > 0 && material.transparency > 0
+      reflectance = World.schlick(comps)
+      surface + reflected * reflectance + refracted * (1 - reflectance)
+    else
+      surface + reflected + refracted
+    end
   end
 
   def color_at(ray, remaining = 5)
@@ -89,7 +96,7 @@ class World
   def refracted_color(comps, remaining = 5)
     n_ratio = comps.n1 / comps.n2
     cos_i = comps.eyev.dot(comps.normalv)
-    sin2_t = (n_ratio**2) * (1.0 - (cos_i**2))
+    sin2_t = (n_ratio * n_ratio) * (1.0 - (cos_i * cos_i))
 
     return Color::BLACK if remaining == 0 ||
                            comps.object.material.transparency == 0.0 ||
@@ -97,10 +104,29 @@ class World
 
     cos_t = Math.sqrt(1.0 - sin2_t)
 
-    direction = (comps.normalv * (n_ratio * cos_i - cos_t)) -
-                (comps.eyev * n_ratio)
+    direction = comps.normalv * (n_ratio * cos_i - cos_t) -
+                comps.eyev * n_ratio
 
     ray = Ray.new(comps.under_point, direction)
     color_at(ray, remaining - 1) * comps.object.material.transparency
+  end
+
+  def self.schlick(comps)
+    cos = comps.eyev.dot(comps.normalv)
+
+    if comps.n1 > comps.n2
+      n = comps.n1 / comps.n2
+      sin2_t = n * n * (1.0 - cos * cos)
+      return 1.0 if sin2_t > 1.0
+
+      cos_t = Math.sqrt(1.0 - sin2_t)
+      cos = cos_t
+    end
+
+    r0 = ((comps.n1 - comps.n2) / (comps.n1 + comps.n2))
+    r0 *= r0
+
+    x = (1 - cos)
+    r0 + (1 - r0) * x * x * x * x * x
   end
 end

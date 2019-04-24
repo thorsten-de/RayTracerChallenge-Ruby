@@ -59,3 +59,21 @@ end
 Then('comps.point.z < comps.under_point.z') do
   expect(@comps.point.z).to be < @comps.under_point.z
 end
+
+Given('shape ← glass_sphere') do
+  @shape = glass_sphere
+end
+
+When('reflectance ← schlick\(comps)') do
+  @reflectance = World.schlick(@comps)
+end
+
+Then('reflectance = {num}') do |num|
+  expect(@reflectance).to eps(num)
+end
+
+Given('xs ← intersections\({num}:shape)') do |t|
+  @xs = [
+    Intersection.new(t, @shape)
+  ]
+end
