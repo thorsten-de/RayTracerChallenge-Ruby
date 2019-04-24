@@ -65,8 +65,8 @@ world = World.new(
         color: Tuple.color(1, 0.8, 0.1),
         diffuse: 0.7,
         specular: 0.3,
-        refraction_factor: 1.52,
-        transparency: 1.0
+        refractive_index: 1.52,
+        transparency: 0.9
       )
     )
   ]
