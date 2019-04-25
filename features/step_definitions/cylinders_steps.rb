@@ -1,7 +1,7 @@
 World BaseHelper
 
-Given('cyl ← cylinder') do
-  @cyl = Cylinder.new
+Given('shape ← cylinder') do
+  @shape = Cylinder.new
 end
 
 Given('direction ← normalize\({vector})') do |vector|
@@ -12,26 +12,34 @@ Given('r ← ray\({point}, direction)') do |point|
   @r = Ray.new(point, @direction)
 end
 
-When('xs ← local_intersect\(cyl, r)') do
-  @xs = @cyl.local_intersect(@r)
+When('xs ← local_intersect\(shape, r)') do
+  @xs = @shape.local_intersect(@r)
 end
 
-When('n ← local_normal_at\(cyl, {point})') do |point|
-  @n = @cyl.local_normal_at(point)
+When('n ← local_normal_at\(shape, {point})') do |point|
+  @n = @shape.local_normal_at(point)
 end
 
-Then('cyl.minimum = -infinity') do
-  expect(@cyl.minimum).to eq(-Float::INFINITY)
+Then('shape.minimum = -infinity') do
+  expect(@shape.minimum).to eq(-Float::INFINITY)
 end
 
-Then('cyl.maximum = infinity') do
-  expect(@cyl.maximum).to eq(Float::INFINITY)
+Then('shape.maximum = infinity') do
+  expect(@shape.maximum).to eq(Float::INFINITY)
 end
 
-Given('cyl.minimum ← {num}') do |num|
-  @cyl.minimum = num
+Given('shape.minimum ← {num}') do |num|
+  @shape.minimum = num
 end
 
-Given('cyl.maximum ← {num}') do |num|
-  @cyl.maximum = num
+Given('shape.maximum ← {num}') do |num|
+  @shape.maximum = num
+end
+
+Then('shape.closed = {bool}') do |bool|
+  expect(@shape.closed).to be(bool)
+end
+
+Given('shape.closed ← {bool}') do |bool|
+  @shape.closed = bool
 end

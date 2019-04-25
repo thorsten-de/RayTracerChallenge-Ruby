@@ -6,7 +6,7 @@ black = Color::BLACK
 floor_material = Material.new(
   color: Tuple.color(1, 1, 1),
   reflective: 0.3,
-  pattern: Pattern.checkers(white, black, transform: Transformations.scaling(0.1, 0.1, 0.1))
+  pattern: Pattern.ring(white, black, transform: Transformations.scaling(0.1, 0.1, 0.1))
 )
 
 wall_material = Material.new(
@@ -31,8 +31,23 @@ world = World.new(
       material: floor_material
     ),
     Cylinder.new(
+      minimum: -10.0,
+      maximum: -2.0,
+      closed: true,
+      reflective: 0.7,
       material: Material.new(
-        pattern: Pattern.ring(white, Tuple.color(1, 0, 0), transform: Matrix.I.scale(0.2, 0.2, 0.2))
+        pattern: Pattern.checkers(white, Tuple.color(1, 0, 0), transform: Matrix.I.scale(0.2, 0.2, 0.2))
+      )
+    ),
+
+    Cone.new(
+      minimum: 0.0,
+      maximum: 2.0,
+      closed: true,
+      reflective: 0.7,
+      transform: Matrix.I.translate(0, 1, 0),
+      material: Material.new(
+        pattern: Pattern.ring(white, Tuple.color(0, 1, 0), transform: Matrix.I.scale(0.2, 0.2, 0.2))
       )
     )
   ]
