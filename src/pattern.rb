@@ -20,7 +20,7 @@ class Pattern
   end
 
   def pattern_at_shape(object, world_point)
-    object_point = object.inverse_transform * world_point
+    object_point = object.world_to_object(world_point)
     pattern_point = inverse_transform * object_point
 
     pattern_at(pattern_point)

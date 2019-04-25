@@ -56,3 +56,7 @@ Feature: Shape
     And p ← point(√0/1, √2/2, -√2/2)
     When n ← normal_at(s, p)
     Then n = vector(0, 0.97014, -0.24254)
+
+  Scenario: A shape has a parent attribute
+    Given s ← test_shape
+    Then s.parent is nothing

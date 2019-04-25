@@ -15,3 +15,7 @@ end
 Then('s.saved_ray.direction = {vector}') do |vector|
   expect(@s.saved_ray.direction).to eq(vector)
 end
+
+Then('s.parent is nothing') do
+  expect(@s.parent).to be(nil)
+end
