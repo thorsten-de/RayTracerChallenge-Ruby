@@ -27,6 +27,48 @@ class Shape
     throw NotImplementedError
   end
 
+  def bounds
+    [
+      Tuple.point(-1, -1, -1),
+      Tuple.point(1, 1, 1)
+    ]
+  end
+
+  def local_intersect_bounds(ray)
+    top, bottom = bounds
+    group = ray.origin.zip(ray.direction)
+               .take(3)
+               .map.with_index { |args, i| check_axis(args[0], args[1], top[i], bottom[i]) }
+               .transpose
+
+    tmin = group[0].max
+    tmax = group[1].min
+
+    p(tmin: tmin, tmax: tmax, group: group, ray: ray, top: top, bottom: bottom)
+    return [] if tmin > tmax
+
+    [Intersection.new(tmin, self), Intersection.new(tmax, self)]
+  end
+
+  def hit_bounds(ray)
+    !local_intersect_bounds(ray).empty?
+  end
+
+  def check_axis(origin, direction, min, max)
+    tmin_numerator = (min - origin)
+    tmax_numerator = (max - origin)
+
+    tmin, tmax = if direction.abs >= RayTracer::EPSILON
+                   [tmin_numerator / direction,
+                    tmax_numerator / direction]
+                 else
+                   [tmin_numerator * Float::INFINITY,
+                    tmax_numerator * Float::INFINITY]
+    end
+
+    tmin > tmax ? [tmax, tmin] : [tmin, tmax]
+  end
+
   def normal_at(point)
     object_point = world_to_object(point)
     object_normal = local_normal_at(object_point)
@@ -53,6 +95,9 @@ class Shape
       v
     end
   end
+end
+
+class ErrorShape < Shape
 end
 
 class TestShape < Shape

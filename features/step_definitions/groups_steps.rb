@@ -92,3 +92,39 @@ end
 When('n ← normal_to_world\(s, {vector})') do |vector|
   @n = @s.normal_to_world(vector)
 end
+
+Then('g.bounds = s.bounds') do
+  expect(@g.bounds).to eq(@s.bounds)
+end
+
+Given('s{int} ← test_shape') do |i|
+  s[i] = TestShape.new
+end
+
+Then('g.bounds = [{point}, {point}]') do |top, bottom|
+  expect(@g.bounds[0]).to eps(top)
+  expect(@g.bounds[1]).to eps(bottom)
+end
+
+When('xs ← local_intersect_bounds\(g, r)') do
+  @xs = @g.local_intersect_bounds(@r)
+end
+
+Then('xs[{int}].t = {frac}') do |i, frac|
+end
+
+Then('xs[{int}].t = {frac} + {num}') do |i, frac, num|
+  expect(@xs[i].t).to eps(frac + num)
+end
+
+Then('g.hit_bounds\(r) = {bool}') do |bool|
+  expect(@g.hit_bounds(@r)).to be(bool)
+end
+
+Given('s{int} ← shape') do |i|
+  s[i] = Shape.new
+end
+
+Then('children intersections are not tested') do
+  expect { @g.intersect(@r) }.not_to raise_error
+end

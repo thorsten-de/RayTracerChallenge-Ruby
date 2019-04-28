@@ -31,6 +31,10 @@ class Tuple
     w == 1.0
   end
 
+  def [](idx)
+    @data[idx]
+  end
+
   def self.vector(x, y, z)
     Tuple.new([x, y, z, 0])
   end

@@ -4,6 +4,13 @@ class Plane < Shape
     Tuple.vector(0, 1, 0)
   end
 
+  def bounds
+    [
+      Tuple.point(-Float::INFINITY, 0, -Float::INFINITY),
+      Tuple.point(Float::INFINITY, 0, Float::INFINITY)
+    ]
+  end
+
   def local_intersect(ray)
     return [] if ray.direction.y.abs < RayTracer::EPSILON
 

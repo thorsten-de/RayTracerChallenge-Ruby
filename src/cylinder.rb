@@ -8,6 +8,11 @@ class Cylinder < Shape
     @closed = opts[:closed] || false
   end
 
+  def bounds
+    [Tuple.point(-1, @minimum, -1),
+     Tuple.point(1, @maximum, 1)]
+  end
+
   def local_intersect(ray)
     d = ray.direction
     o = ray.origin
@@ -83,12 +88,18 @@ class Cylinder < Shape
 end
 
 class Cone < Cylinder
+  def bounds
+    [
+      Tuple.point(@minimum, @minimum, @minimum),
+      Tuple.point(@maximum, @maximum, @maximum)
+    ]
+  end
+
   def calculate_abc(o, d)
     [
       d.x * d.x - d.y * d.y + d.z * d.z,
       2 * o.x * d.x - 2 * o.y * d.y + 2 * o.z * d.z,
       o.x * o.x - o.y * o.y + o.z * o.z
-
     ]
   end
 
@@ -115,5 +126,5 @@ class Cone < Cylinder
     z = ray.origin.z + t * ray.direction.z
 
     (x * x + z * z) <= y.abs
-end
+  end
 end

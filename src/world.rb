@@ -1,4 +1,3 @@
-require 'byebug'
 class World
   attr_accessor :lights, :objects
 
