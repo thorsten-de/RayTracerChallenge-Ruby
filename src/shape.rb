@@ -16,6 +16,7 @@ class Shape
 
   def inverse_transform
     @inverse_transform ||= @transform.inverse
+    # @transform.inverse
   end
 
   def intersect(ray)
@@ -85,14 +86,11 @@ class Shape
   end
 
   def normal_to_world(vector)
-    v = inverse_transform.transpose * vector
+    v = (inverse_transform.transpose * vector)
     v.w = 0
     v = v.normalize
-    if @parent
-      @parent.normal_to_world(v)
-    else
-      v
-    end
+    v = @parent.normal_to_world(v) if @parent
+    v
   end
 end
 

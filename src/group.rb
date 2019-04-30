@@ -3,7 +3,8 @@ class Group < Shape
 
   def initialize(opts = {})
     super(opts)
-    @children = opts[:children] || []
+    @children = []
+    opts[:children].reduce(self, &:<<) if opts[:children]
   end
 
   def <<(c)
@@ -21,6 +22,8 @@ class Group < Shape
   end
 
   def bounds
+    return @__bounds if @__bounds
+
     minmax = @children.map { |s| [s, expand_bounds(*s.bounds)] }
                       .map { |s, pts| pts.map { |p| s.transform * p } }
                       .flatten
@@ -28,7 +31,7 @@ class Group < Shape
                       .transpose
                       .map(&:minmax)
 
-    [
+    @__bounds = [
       Tuple.point(minmax[0][0], minmax[1][0], minmax[2][0]),
       Tuple.point(minmax[0][1], minmax[1][1], minmax[2][1])
     ]
