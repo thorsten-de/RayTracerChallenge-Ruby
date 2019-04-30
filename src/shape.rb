@@ -44,7 +44,6 @@ class Shape
     tmin = group[0].max
     tmax = group[1].min
 
-    p(tmin: tmin, tmax: tmax, group: group, ray: ray, top: top, bottom: bottom)
     return [] if tmin > tmax
 
     [Intersection.new(tmin, self), Intersection.new(tmax, self)]
