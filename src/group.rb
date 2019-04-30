@@ -28,12 +28,10 @@ class Group < Shape
                       .transpose
                       .map(&:minmax)
 
-    b = [
+    [
       Tuple.point(minmax[0][0], minmax[1][0], minmax[2][0]),
       Tuple.point(minmax[0][1], minmax[1][1], minmax[2][1])
     ]
-    p b
-    b
   end
 
   def expand_bounds(t, b)
