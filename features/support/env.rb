@@ -32,6 +32,10 @@ module BaseHelper
     expect(v).to eps(w)
   end
 
+  def p
+    @values[:p]
+  end
+
   def put(type, id, value)
     @values ||= {
       a: {},
