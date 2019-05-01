@@ -18,3 +18,19 @@ end
 Then('t.normal = {vector}') do |vector|
   expect(@t.normal).to eq(vector)
 end
+
+Given('t ← triangle\({point}, {point}, {point})') do |p1, p2, p3|
+  @t = Triangle.new([p1, p2, p3])
+end
+
+When('n{int} ← local_normal_at\(t, {point})') do |i, point|
+  n[i] = @t.local_normal_at(point)
+end
+
+Then('n{int} = t.normal') do |i|
+  expect(n[i]).to eq(@t.normal)
+end
+
+When('xs ← local_intersect\(t, r)') do
+  @xs = @t.local_intersect(@r)
+end
