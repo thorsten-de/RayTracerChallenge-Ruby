@@ -70,3 +70,16 @@ end
 Then('g includes {string} from parser') do |name|
   expect(@g.children).to include(@parser.groups[name])
 end
+
+Then('parser.normals[{int}] = {vector}') do |int, vector|
+  expect(@parser.normals[int]).to eq(vector)
+end
+
+Then('t{int}.n{int} = parser.normals[{int}]') do |ti, ni, j|
+  expect(t[ti].n[ni - 1]).to eq(@parser.normals[j])
+end
+
+Then('t{int} = t{int}') do |i1, i2|
+  expect(t[i1].p).to eq(t[i2].p)
+  expect(t[i1].n).to eq(t[i2].n)
+end

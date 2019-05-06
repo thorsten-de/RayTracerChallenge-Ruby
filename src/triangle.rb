@@ -38,7 +38,6 @@ class SmoothTriangle < Triangle
 
   def initialize(vertices, opts = {})
     super(vertices, opts)
-
     @n = opts[:normals] || []
   end
 
