@@ -31,6 +31,18 @@ class Triangle < Shape
     t = f * @e[1].dot(origin_cross_e1)
     [Intersection.new(t, self, u, v)]
   end
+
+  def bounds
+    return @__bounds if @__bounds
+
+    minmax = @p.map(&:data)
+               .transpose
+               .map(&:minmax)
+    @__bounds = [
+      Tuple.point(minmax[0][0], minmax[1][0], minmax[2][0]),
+      Tuple.point(minmax[0][1], minmax[1][1], minmax[2][1])
+    ]
+  end
 end
 
 class SmoothTriangle < Triangle

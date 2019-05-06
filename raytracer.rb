@@ -1,5 +1,6 @@
 module RayTracer
   EPSILON = 0.0001
+  BOUNDING_BOX_TEST = false
 end
 
 require_relative 'src/tuple.rb'

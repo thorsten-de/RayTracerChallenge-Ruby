@@ -7,14 +7,14 @@ class ObjFile
                 :groups
 
   PARSERS = [
-    { pattern: /^v\s+([-\d\.]+)\s+([-\d\.]+)\s+([-\d\.]+)$/, f: lambda { |data, match|
-                                                                  data.vertices << Tuple.point(match[1].to_f, match[2].to_f, match[3].to_f)
+    { pattern: /^v\s+([-\d\.]+)\s+([-\d\.]+)\s+([-\d\.]+)/, f: lambda { |data, match|
+                                                                 data.vertices << Tuple.point(match[1].to_f, match[2].to_f, match[3].to_f)
+                                                                 data
+                                                               } },
+    { pattern: /^vn\s+([-\d\.]+)\s+([-\d\.]+)\s+([-\d\.]+)/, f: lambda { |data, match|
+                                                                  data.normals << Tuple.vector(match[1].to_f, match[2].to_f, match[3].to_f)
                                                                   data
                                                                 } },
-    { pattern: /^vn\s+([-\d\.]+)\s+([-\d\.]+)\s+([-\d\.]+)$/, f: lambda { |data, match|
-                                                                   data.normals << Tuple.vector(match[1].to_f, match[2].to_f, match[3].to_f)
-                                                                   data
-                                                                 } },
     { pattern: /^f\s+(.*)$/, f: lambda { |data, match|
                                   vertex_indices = match[1].split
                                                            .map { |token| data.create_vertex(token) }
