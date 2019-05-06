@@ -1,4 +1,9 @@
-World BaseHelper
+module ObjFileHelper
+  def t
+    (@__t ||= {})
+  end
+end
+World BaseHelper, ObjFileHelper
 
 Given('gibberish ← a file containing:') do |string|
   @gibberish = StringIO.new(string)
@@ -22,4 +27,46 @@ end
 
 Then('parser.vertices[{int}] = {point}') do |int, point|
   expect(@parser.vertices[int]).to eq(point)
+end
+When('g ← parser.default_group') do
+  @g = @parser.default_group
+end
+
+When('t{int} ← first child of g') do |i|
+  t[i] = @g.children[0]
+end
+
+When('t{int} ← second child of g') do |i|
+  t[i] = @g.children[1]
+end
+
+When('t{int} ← third child of g') do |i|
+  t[i] = @g.children[2]
+end
+
+Then('t{int}.p{int} = parser.vertices[{int}]') do |ti, pi, vi|
+  expect(t[ti].p[pi - 1]).to eq(@parser.vertices[vi])
+end
+
+Given('file ← the file {string}') do |filename|
+  @file = File.open("files/#{filename}")
+end
+
+When('g{int} ← {string} from parser') do |i, name|
+  g[i] =  @parser.groups[name]
+end
+
+When('t{int} ← first child of g{int}') do |ti, gi|
+  # When("t{int} ← first child of g{num}") do |int, num|
+  # When("t{num} ← first child of g{int}") do |num, int|
+  # When("t{num} ← first child of g{num}") do |num, num2|
+  t[ti] = g[gi].children.first
+end
+
+When('g ← obj_to_group\(parser)') do
+  @g = @parser.obj_to_group
+end
+
+Then('g includes {string} from parser') do |name|
+  expect(@g.children).to include(@parser.groups[name])
 end
