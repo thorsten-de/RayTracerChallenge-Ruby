@@ -41,7 +41,7 @@ class Ray
   def prepare_computations(xs, intersections = [xs])
     point = position(xs.t)
     eyev = -@direction
-    normal = xs.object.normal_at(point)
+    normal = xs.object.normal_at(point, xs)
 
     inside, normalv = if normal.dot(eyev) < 0
                         [true, -normal]
@@ -95,14 +95,16 @@ class Ray
 end
 
 class Intersection
-  def initialize(t, o)
+  def initialize(t, o, u = nil, v = nil)
     @object = o
     @t = t
+    @u = u
+    @v = v
   end
 
   attr_reader :object
 
-  attr_reader :t
+  attr_reader :t, :u, :v
 
   def self.intersections(*args)
     args

@@ -9,7 +9,7 @@ class Triangle < Shape
     @normal = e[1].cross(e[0]).normalize
   end
 
-  def local_normal_at(_any_point)
+  def local_normal_at(_point, _hit = nil)
     @normal
   end
 
@@ -29,6 +29,21 @@ class Triangle < Shape
     return [] if (v < 0) || (u + v) > 1
 
     t = f * @e[1].dot(origin_cross_e1)
-    [Intersection.new(t, self)]
+    [Intersection.new(t, self, u, v)]
+  end
+end
+
+class SmoothTriangle < Triangle
+  attr_reader :n
+
+  def initialize(vertices, opts = {})
+    super(vertices, opts)
+
+    @n = opts[:normals] || []
+  end
+
+  def local_normal_at(_any_point, hit)
+    @n[1] * hit.u + @n[2] * hit.v +
+      @n[0] * (1 - hit.u - hit.v)
   end
 end

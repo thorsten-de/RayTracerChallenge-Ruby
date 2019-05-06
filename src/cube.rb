@@ -3,7 +3,7 @@ class Cube < Shape
     local_intersect_bounds(ray)
   end
 
-  def local_normal_at(point)
+  def local_normal_at(point, _hit = nil)
     idx, value = (0..2).zip(point.data).max_by do |_, value|
       value.abs
     end

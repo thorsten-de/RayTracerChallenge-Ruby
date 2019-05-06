@@ -53,7 +53,7 @@ class Cylinder < Shape
     [a.abs <= RayTracer::EPSILON, []]
   end
 
-  def local_normal_at(p)
+  def local_normal_at(p, hit= nil)
     dist = p.x * p.x + p.z * p.z
     if (dist < 1) && (p.y >= @maximum - RayTracer::EPSILON)
       Tuple.vector(0.0, 1.0, 0.0)

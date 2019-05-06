@@ -21,7 +21,7 @@ Then('comps.eyev = {vector}') do |vector|
 end
 
 Then('comps.normalv = {vector}') do |vector|
-  expect(@comps.normalv).to eq(vector)
+  expect(@comps.normalv).to eps(vector)
 end
 
 Then('comps.inside = false') do
@@ -76,4 +76,20 @@ Given('xs ← intersections\({num}:shape)') do |t|
   @xs = [
     Intersection.new(t, @shape)
   ]
+end
+
+Given('s ← triangle\({point}, {point}, {point})') do |p1, p2, p3|
+  @s = Triangle.new([p1, p2, p3])
+end
+
+When('i ← intersection_with_uv\({num}, s, {num}, {num})') do |t, u, v|
+  @i = Intersection.new(t, @s, u, v)
+end
+
+Then('i.u = {num}') do |num|
+  expect(@i.u).to eq(num)
+end
+
+Then('i.v = {num}') do |num|
+  expect(@i.v).to eq(num)
 end

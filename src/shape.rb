@@ -69,13 +69,13 @@ class Shape
     tmin > tmax ? [tmax, tmin] : [tmin, tmax]
   end
 
-  def normal_at(point)
+  def normal_at(point, hit = nil)
     object_point = world_to_object(point)
-    object_normal = local_normal_at(object_point)
+    object_normal = local_normal_at(object_point, hit)
     normal_to_world(object_normal)
   end
 
-  def local_normal_at(_point)
+  def local_normal_at(_point, _hit = nil)
     throw NotImplementedError
   end
 
@@ -103,7 +103,7 @@ class TestShape < Shape
     @saved_ray = ray
   end
 
-  def local_normal_at(p)
+  def local_normal_at(p, _hit = nil)
     Tuple.vector(p.x, p.y, p.z)
   end
 end

@@ -1,6 +1,6 @@
 # Eine Ebene, planar auf der XZ-Achse durch den Ursprung
 class Plane < Shape
-  def local_normal_at(_every_point)
+  def local_normal_at(_every_point, _hit = nil)
     Tuple.vector(0, 1, 0)
   end
 

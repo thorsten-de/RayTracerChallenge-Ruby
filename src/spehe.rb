@@ -7,7 +7,7 @@ class Sphere < Shape
     ray.intersect(self)
   end
 
-  def local_normal_at(object_p)
+  def local_normal_at(object_p, _hit = nil)
     object_p - @origin
   end
 
